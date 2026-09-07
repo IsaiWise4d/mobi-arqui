@@ -7,6 +7,7 @@ import '@fontsource/fragment-mono/400.css';
 import '../styles/global.css';
 
 const igUrl = 'https://instagram.com/mobi_arquitectura';
+const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encontré Mobi Arquitectura en su sitio web y me gustaría cotizar un proyecto.')}`;
 ---
 
 <html lang="es-MX">
@@ -16,7 +17,7 @@ const igUrl = 'https://instagram.com/mobi_arquitectura';
     <title>Mobi Arquitectura · El plano cobra vida</title>
     <meta
       name="description"
-      content="Arquitectura, diseño de espacios, carpintería y obra civil con un solo equipo responsable. Proyectos a medida en México; cotiza por WhatsApp."
+      content="Carpintería arquitectónica, diseño de mobiliario, obra civil y acabados en Barranquilla, Colombia. Un solo equipo para llevar tu idea a la realidad."
     />
     <meta name="theme-color" content="#f4f0e6" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -38,9 +39,9 @@ const igUrl = 'https://instagram.com/mobi_arquitectura';
         <a href="#portafolio">Portafolio</a>
         <a href="#contacto">Contacto</a>
       </nav>
-      <span class="sello sello-nav sello-pending" aria-disabled="true" aria-label="WhatsApp pendiente: número por confirmar">
+      <a class="sello sello-nav" href={waUrl} target="_blank" rel="noopener" aria-label="Cotiza por WhatsApp">
         Cotiza por WhatsApp
-      </span>
+      </a>
     </header>
 
     <main id="contenido">
@@ -62,7 +63,7 @@ const igUrl = 'https://instagram.com/mobi_arquitectura';
             <img class="hero-noscript" src="/frames/f_240.webp" alt="Interior de madera y concreto con luz natural, terminado" />
           </noscript>
 
-          <div class="hero-intro" id="heroIntro"><h1 class="hero-title">El plano cobra <em class="vida">vida</em>.</h1><p class="hero-sub">Un solo equipo responsable: el mismo estudio que dibuja ejecuta la obra y fabrica la carpintería.</p><div class="hero-cta"><span class="sello sello-big sello-pending" aria-disabled="true" aria-label="WhatsApp pendiente: número por confirmar">Cotiza por WhatsApp</span><p class="hero-note">WhatsApp: número por confirmar · <a href={igUrl} target="_blank" rel="noopener">@mobi_arquitectura ↗</a></p></div></div>
+          <div class="hero-intro" id="heroIntro"><h1 class="hero-title">El plano cobra <em class="vida">vida</em>.</h1><p class="hero-sub">Un solo equipo responsable: el mismo estudio que dibuja ejecuta la obra y fabrica la carpintería.</p><div class="hero-cta"><a class="sello sello-big" href={waUrl} target="_blank" rel="noopener">Cotiza por WhatsApp</a><p class="hero-note">WhatsApp · respuesta directa · <a href={igUrl} target="_blank" rel="noopener">@mobi_arquitectura ↗</a></p></div></div>
 
           <div class="hero-hud" id="heroHud">
             <p class="hud-hint">DESLIZA PARA CONSTRUIR ↓</p>
@@ -109,31 +110,61 @@ const igUrl = 'https://instagram.com/mobi_arquitectura';
           <div class="sec-head reveal">
              <h2 class="sec-title">Qué construimos.</h2>
           </div>
-          <div class="rows">
-            <div class="row reveal">
-              <p class="row-code">A-01</p>
-              <p class="row-name">Arquitectura</p>
-              <p class="row-desc">Del anteproyecto al plano ejecutivo, listo para construir.</p>
-            </div>
-            <div class="row reveal">
-              <p class="row-code">D-02</p>
-              <p class="row-name">Diseño de espacios</p>
-              <p class="row-desc">Distribución, luz y función: estética que trabaja para vivir.</p>
-            </div>
-            <div class="row reveal">
-              <p class="row-code">C-03</p>
-              <p class="row-name">Carpintería</p>
-              <p class="row-desc">Mueble a medida fabricado en taller propio e instalado por nosotros.</p>
-            </div>
-            <div class="row reveal">
-              <p class="row-code">O-04</p>
-              <p class="row-name">Obra civil</p>
-              <p class="row-desc">Ejecución y acabados con el mismo equipo que diseñó el proyecto.</p>
-            </div>
-          </div>
-          <p class="rows-note">* Cotización personalizada, sin precios de lista.</p>
-        </div>
-      </section>
+           <div class="rows">
+             <div class="row reveal">
+               <p class="row-code">A-01</p>
+               <p class="row-name">Carpintería arquitectónica</p>
+               <p class="row-desc">Diseñamos y fabricamos soluciones a medida para cada espacio.</p>
+             </div>
+             <div class="row reveal">
+               <p class="row-code">D-02</p>
+               <p class="row-name">Asesorías de diseño de mobiliario</p>
+               <p class="row-desc">Convertimos tus ideas en propuestas funcionales y bien resueltas.</p>
+             </div>
+             <div class="row reveal">
+               <p class="row-code">C-03</p>
+               <p class="row-name">Obra civil y acabados</p>
+               <p class="row-desc">Ejecutamos la obra y cuidamos cada detalle hasta la entrega.</p>
+             </div>
+             <div class="row reveal">
+               <p class="row-code">O-04</p>
+               <p class="row-name">Divisiones de baño en vidrio templado</p>
+               <p class="row-desc">Suministro e instalación para completar el espacio con precisión.</p>
+             </div>
+           </div>
+           <p class="rows-note">* Cotización personalizada, sin precios de lista.</p>
+         </div>
+       </section>
+
+       <section class="sec" aria-label="Nuestro proceso">
+         <div class="wrap">
+           <div class="sec-head reveal">
+             <h2 class="sec-title">Nuestro proceso.</h2>
+           </div>
+           <div class="rows process-rows">
+             <div class="row reveal">
+               <p class="row-code">01</p>
+               <p class="row-name">Escuchamos tu idea</p>
+               <p class="row-desc">Entendemos lo que necesitas y cómo quieres vivir el espacio.</p>
+             </div>
+             <div class="row reveal">
+               <p class="row-code">02</p>
+               <p class="row-name">Diseñamos la propuesta</p>
+               <p class="row-desc">Damos forma al proyecto con una solución clara y a tu medida.</p>
+             </div>
+             <div class="row reveal">
+               <p class="row-code">03</p>
+               <p class="row-name">Fabricamos a detalle</p>
+               <p class="row-desc">Producimos cada elemento con cuidado, materialidad y precisión.</p>
+             </div>
+             <div class="row reveal">
+               <p class="row-code">04</p>
+               <p class="row-name">Instalamos y damos vida al proyecto</p>
+               <p class="row-desc">Coordinamos la instalación para entregarte el resultado terminado.</p>
+             </div>
+           </div>
+         </div>
+       </section>
 
       <section class="sec" id="portafolio">
         <div class="wrap">
@@ -160,16 +191,16 @@ const igUrl = 'https://instagram.com/mobi_arquitectura';
              <h2 class="sec-title">¿Tienes un espacio en mente?</h2>
           </div>
           <div class="reveal">
-            <p class="contact-line">WhatsApp · contacto directo, sin formularios</p>
+             <p class="contact-line">Barranquilla, Colombia · WhatsApp directo, sin formularios</p>
             <div class="contact-actions">
-               <span class="sello sello-pending" aria-disabled="true" aria-label="WhatsApp pendiente: número por confirmar">
+               <a class="sello" href={waUrl} target="_blank" rel="noopener" aria-label="Cotiza por WhatsApp">
                 <svg viewBox="0 0 448 512" width="15" height="17" fill="currentColor" aria-hidden="true">
                   <path
                     d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.1-29.4-27.7-63.3-27.7-98.1 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.7 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"
                   ></path>
                 </svg>
                 Cotiza por WhatsApp
-              </span>
+               </a>
               <a class="sello" href={igUrl} target="_blank" rel="noopener">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <rect x="3" y="3" width="18" height="18" rx="5"></rect>
@@ -180,7 +211,7 @@ const igUrl = 'https://instagram.com/mobi_arquitectura';
               </a>
             </div>
             <p class="contact-note" style="margin-top: 22px">
-              * Número de WhatsApp por confirmar. Mientras tanto, escríbenos por Instagram y te cotizamos a medida.
+               Escríbenos por WhatsApp y cuéntanos qué espacio quieres transformar. Te respondemos directamente desde el equipo.
             </p>
           </div>
         </div>
@@ -190,6 +221,7 @@ const igUrl = 'https://instagram.com/mobi_arquitectura';
     <footer class="pie">
       <div class="wrap pie-in">
         <span>Proyecto: Mobi Arquitectura</span>
+        <span>Barranquilla, Colombia</span>
         <span>Lámina: L-01</span>
         <span>Escala: 1:1</span>
         <span>Rev: 00</span>
