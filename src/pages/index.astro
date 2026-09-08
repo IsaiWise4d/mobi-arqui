@@ -107,13 +107,20 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
 
     <footer class="pie">
       <div class="wrap pie-in">
-        <span>Proyecto: Mobi Arquitectura</span>
-        <span>Barranquilla, Colombia</span>
-        <span>Lámina: L-01</span>
-        <span>Escala: 1:1</span>
-        <span>Rev: 00</span>
-        <a href={igUrl} target="_blank" rel="noopener">IG: @mobi_arquitectura</a>
-        <span>© 2026 Mobi Arquitectura</span>
+        <a class="pie-brand" href="#inicio" aria-label="Volver al inicio">
+          <strong>MOBI</strong>
+          <span>ARQUITECTURA</span>
+        </a>
+        <nav class="pie-links" aria-label="Enlaces del pie de página">
+          <a href="#servicios">Servicios</a>
+          <a href="#portafolio">Portafolio</a>
+          <a href={igUrl} target="_blank" rel="noopener">Instagram</a>
+          <a href="#contacto">Contacto</a>
+        </nav>
+        <div class="pie-meta">
+          <span>Barranquilla, Colombia</span>
+          <span>© 2026 Mobi Arquitectura</span>
+        </div>
       </div>
     </footer>
 
@@ -197,8 +204,6 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
           rotateY: 0, rotateZ: 0, y: 0, opacity: 1, duration: 1.05, ease: 'power3.out',
           scrollTrigger: { trigger: '.phone-wrap', start: 'top 78%', toggleActions: 'play none none reverse' },
         });
-        gsap.to('.phone', { y: -8, duration: 2.8, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 1.1 });
-
         gsap.fromTo('.ig-grid img', { opacity: 0, scale: .86 }, {
           opacity: 1, scale: 1, duration: .45, stagger: .07, ease: 'power2.out',
           scrollTrigger: { trigger: '.ig-grid', start: 'top 84%', toggleActions: 'play none none reverse' },
