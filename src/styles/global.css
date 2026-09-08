@@ -966,7 +966,7 @@ html:not(.js) .hero-intro::before {
   }
 
   .hero {
-    height: 300vh;
+    height: 340vh;
   }
 
   .hero-intro::before {

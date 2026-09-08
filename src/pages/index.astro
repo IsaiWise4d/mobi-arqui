@@ -232,10 +232,11 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
        const bridge = document.getElementById('heroBridge');
       const status = document.getElementById('heroStatus');
       const fallback = document.getElementById('heroFallback');
-      const hero = document.getElementById('inicio');
-      const siteNav = document.getElementById('siteNav');
-      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const ctx = canvas.getContext('2d');
+       const hero = document.getElementById('inicio');
+       const siteNav = document.getElementById('siteNav');
+       const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+       const mobileViewport = window.matchMedia('(max-width: 700px)').matches;
+       const ctx = canvas.getContext('2d');
       const frames = new Array(COUNT).fill(null);
       let drawn = -1;
       let target = reduced ? COUNT - 1 : 0;
@@ -244,10 +245,20 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
       let loaded = 0;
       let failed = 0;
 
-      function draw(n) {
-        let i = n;
-        while (i > 0 && !frames[i]) i--;
-        if (!frames[i] || i === drawn) return;
+       function closestLoadedFrame(n) {
+         if (frames[n]) return n;
+         for (let distance = 1; distance < COUNT; distance++) {
+           const before = n - distance;
+           const after = n + distance;
+           if (before >= 0 && frames[before]) return before;
+           if (after < COUNT && frames[after]) return after;
+         }
+         return -1;
+       }
+
+       function draw(n) {
+         const i = closestLoadedFrame(n);
+         if (i < 0 || i === drawn) return;
         drawn = i;
         const w = canvas.width;
         const h = canvas.height;
@@ -278,7 +289,8 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
           for (; k < end; k++) {
             const n = indices[k];
             const im = new Image();
-            im.decoding = 'async';
+             im.decoding = 'async';
+             im.fetchPriority = mobileViewport && n % 3 === 0 ? 'high' : 'low';
             im.onload = () => {
               frames[n] = im;
               loaded += 1;
@@ -298,9 +310,10 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
         step();
       }
 
-      const order = [];
-      for (let n = 0; n < COUNT; n += 5) order.push(n);
-      for (let n = 0; n < COUNT; n++) if (n % 5 !== 0) order.push(n);
+       const order = [];
+       const priorityStride = mobileViewport ? 3 : 5;
+       for (let n = 0; n < COUNT; n += priorityStride) order.push(n);
+       for (let n = 0; n < COUNT; n++) if (n % priorityStride !== 0) order.push(n);
 
       if (reduced) {
         document.documentElement.classList.add('static-hero');
@@ -319,8 +332,8 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
         if (running && !reduced) {
           const p = progress();
           target = Math.round(p * (COUNT - 1));
-          // Ease toward the scroll position so late-loading frames do not create jumps.
-          displayTarget += (target - displayTarget) * 0.18;
+          // Ease toward the scroll position so the canvas does not skip visibly on touch scroll.
+          displayTarget += (target - displayTarget) * (mobileViewport ? 0.12 : 0.18);
           draw(Math.round(displayTarget));
            if (intro && !reduced) {
              intro.classList.toggle('is-exiting', p > 0.28);
