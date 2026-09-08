@@ -5,6 +5,13 @@ import '@fontsource/archivo/400.css';
 import '@fontsource/archivo/500.css';
 import '@fontsource/fragment-mono/400.css';
 import '../styles/global.css';
+import ServiceRibbon from '../components/ServiceRibbon.astro';
+import Servicios from '../components/Servicios.astro';
+import ServiciosCarousel from '../components/ServiciosCarousel.astro';
+import Proceso from '../components/Proceso.astro';
+import Portafolio from '../components/Portafolio.astro';
+import Instagram from '../components/Instagram.astro';
+import Contacto from '../components/Contacto.astro';
 
 const igUrl = 'https://instagram.com/mobi_arquitectura';
 const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encontré Mobi Arquitectura en su sitio web y me gustaría cotizar un proyecto.')}`;
@@ -89,146 +96,13 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
         </div>
       </section>
 
-      <section class="sec chain" id="servicios">
-        <div class="wrap">
-          <div class="sec-head reveal">
-             <h2 class="sec-title">Del plano al mueble, sin cambiar de manos.</h2>
-          </div>
-          <div class="chain-dim" aria-hidden="true">
-            <p class="dim-label">Un solo responsable</p>
-            <div class="dim-line"></div>
-          </div>
-          <div class="stations">
-            <div class="station reveal">
-              <p class="station-no">01 / DISEÑO</p>
-              <h3>Arquitectura y diseño</h3>
-              <p>El anteproyecto y el diseño de espacios nacen aquí: distribución, luz y función en cada metro.</p>
-            </div>
-            <div class="station reveal">
-              <p class="station-no">02 / OBRA</p>
-              <h3>Obra civil</h3>
-              <p>La obra se ejecuta con el mismo equipo que dibujó el plano, del albañil al acabado.</p>
-            </div>
-            <div class="station reveal">
-              <p class="station-no">03 / CARPINTERÍA</p>
-              <h3>Mueble a medida</h3>
-              <p>La carpintería se fabrica en taller propio y se instala como parte del mismo proyecto.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="sec" aria-label="Índice de planos">
-        <div class="wrap">
-          <div class="sec-head reveal">
-             <h2 class="sec-title">Qué construimos.</h2>
-          </div>
-           <div class="rows">
-             <div class="row reveal">
-               <p class="row-code">A-01</p>
-               <p class="row-name">Carpintería arquitectónica</p>
-               <p class="row-desc">Diseñamos y fabricamos soluciones a medida para cada espacio.</p>
-             </div>
-             <div class="row reveal">
-               <p class="row-code">D-02</p>
-               <p class="row-name">Asesorías de diseño de mobiliario</p>
-               <p class="row-desc">Convertimos tus ideas en propuestas funcionales y bien resueltas.</p>
-             </div>
-             <div class="row reveal">
-               <p class="row-code">C-03</p>
-               <p class="row-name">Obra civil y acabados</p>
-               <p class="row-desc">Ejecutamos la obra y cuidamos cada detalle hasta la entrega.</p>
-             </div>
-             <div class="row reveal">
-               <p class="row-code">O-04</p>
-               <p class="row-name">Divisiones de baño en vidrio templado</p>
-               <p class="row-desc">Suministro e instalación para completar el espacio con precisión.</p>
-             </div>
-           </div>
-           <p class="rows-note">* Cotización personalizada, sin precios de lista.</p>
-         </div>
-       </section>
-
-       <section class="sec" aria-label="Nuestro proceso">
-         <div class="wrap">
-           <div class="sec-head reveal">
-             <h2 class="sec-title">Nuestro proceso.</h2>
-           </div>
-           <div class="rows process-rows">
-             <div class="row reveal">
-               <p class="row-code">01</p>
-               <p class="row-name">Escuchamos tu idea</p>
-               <p class="row-desc">Entendemos lo que necesitas y cómo quieres vivir el espacio.</p>
-             </div>
-             <div class="row reveal">
-               <p class="row-code">02</p>
-               <p class="row-name">Diseñamos la propuesta</p>
-               <p class="row-desc">Damos forma al proyecto con una solución clara y a tu medida.</p>
-             </div>
-             <div class="row reveal">
-               <p class="row-code">03</p>
-               <p class="row-name">Fabricamos a detalle</p>
-               <p class="row-desc">Producimos cada elemento con cuidado, materialidad y precisión.</p>
-             </div>
-             <div class="row reveal">
-               <p class="row-code">04</p>
-               <p class="row-name">Instalamos y damos vida al proyecto</p>
-               <p class="row-desc">Coordinamos la instalación para entregarte el resultado terminado.</p>
-             </div>
-           </div>
-         </div>
-       </section>
-
-      <section class="sec" id="portafolio">
-        <div class="wrap">
-          <div class="sec-head reveal">
-             <h2 class="sec-title">Obra real, en camino.</h2>
-          </div>
-          <div class="plot reveal">
-            <p class="plot-coord tl">0,0</p>
-            <p class="plot-coord tr">16,0</p>
-            <p class="plot-coord bl">0,9</p>
-            <p class="plot-coord br">16,9</p>
-            <p class="stamp">En levantamiento</p>
-          </div>
-          <p class="plot-note reveal">
-            Esta sección se llenará con fotos reales de obra, apenas salgan del taller. Aún no hay proyectos
-            publicados y no los vamos a inventar: el héroe de arriba es el mejor vistazo a lo que hacemos.
-          </p>
-        </div>
-      </section>
-
-      <section class="sec" id="contacto">
-        <div class="wrap">
-          <div class="sec-head reveal">
-             <h2 class="sec-title">¿Tienes un espacio en mente?</h2>
-          </div>
-          <div class="reveal">
-             <p class="contact-line">Barranquilla, Colombia · WhatsApp directo, sin formularios</p>
-            <div class="contact-actions">
-               <a class="sello" href={waUrl} target="_blank" rel="noopener" aria-label="Cotiza por WhatsApp">
-                <svg viewBox="0 0 448 512" width="15" height="17" fill="currentColor" aria-hidden="true">
-                  <path
-                    d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.1-29.4-27.7-63.3-27.7-98.1 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.7 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"
-                  ></path>
-                </svg>
-                Cotiza por WhatsApp
-               </a>
-              <a class="sello" href={igUrl} target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                  <rect x="3" y="3" width="18" height="18" rx="5"></rect>
-                  <circle cx="12" cy="12" r="4.2"></circle>
-                  <circle cx="17.3" cy="6.7" r="1.4" fill="currentColor" stroke="none"></circle>
-                </svg>
-                @mobi_arquitectura
-              </a>
-            </div>
-            <p class="contact-note" style="margin-top: 22px">
-               Escríbenos por WhatsApp y cuéntanos qué espacio quieres transformar. Te respondemos directamente desde el equipo.
-            </p>
-          </div>
-        </div>
-      </section>
+       <ServiceRibbon />
+       <Servicios />
+       <ServiciosCarousel />
+       <Proceso />
+       <Portafolio />
+       <Instagram />
+       <Contacto />
     </main>
 
     <footer class="pie">
@@ -242,6 +116,103 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
         <span>© 2026 Mobi Arquitectura</span>
       </div>
     </footer>
+
+    <script>
+      import gsap from 'gsap';
+      import { ScrollTrigger } from 'gsap/ScrollTrigger';
+      import EmblaCarousel from 'embla-carousel';
+      import Autoplay from 'embla-carousel-autoplay';
+
+      gsap.registerPlugin(ScrollTrigger);
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function setupCarousel() {
+        const root = document.querySelector('[data-carousel]');
+        if (!root) return;
+        const viewport = root.querySelector('.embla__viewport');
+        const previous = root.querySelector('[data-carousel-prev]');
+        const next = root.querySelector('[data-carousel-next]');
+        const current = root.querySelector('[data-carousel-current]');
+        const progress = root.querySelector('.carousel-progress span');
+        const autoplay = reducedMotion ? null : Autoplay({ delay: 4600, stopOnInteraction: false, stopOnMouseEnter: true });
+        const embla = EmblaCarousel(viewport, { loop: true, align: 'start', duration: 35 }, autoplay ? [autoplay] : []);
+        const slides = root.querySelectorAll('.service-slide');
+
+        const update = () => {
+          const index = embla.selectedScrollSnap();
+          current.textContent = String(index + 1).padStart(2, '0');
+          progress.style.transform = `scaleX(${(index + 1) / slides.length})`;
+          slides.forEach((slide, slideIndex) => {
+            const isCurrent = slideIndex === index;
+            slide.setAttribute('aria-hidden', String(!isCurrent));
+            slide.inert = !isCurrent;
+          });
+          if (!reducedMotion) {
+            gsap.fromTo(slides[index].querySelectorAll('.service-copy > *'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .52, stagger: .06, ease: 'power2.out', overwrite: true });
+          }
+        };
+
+        previous.addEventListener('click', () => embla.scrollPrev());
+        next.addEventListener('click', () => embla.scrollNext());
+        embla.on('select', update);
+        embla.on('init', update);
+        update();
+      }
+
+      function setupMotion() {
+        if (reducedMotion) {
+          document.documentElement.classList.add('motion-reduced');
+          return;
+        }
+
+        gsap.utils.toArray('.reveal').forEach((element) => {
+          gsap.fromTo(element, { opacity: 0, y: 28, filter: 'blur(4px)' }, {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: .72,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: element, start: 'top 86%', toggleActions: 'play none none reverse' },
+          });
+        });
+
+        gsap.utils.toArray('[data-gsap="section-head"] h2').forEach((title) => {
+          gsap.fromTo(title, { clipPath: 'inset(0 0 100% 0)', y: 18 }, {
+            clipPath: 'inset(0 0 0% 0)', y: 0, duration: .85, ease: 'power4.out',
+            scrollTrigger: { trigger: title, start: 'top 82%', toggleActions: 'play none none reverse' },
+          });
+        });
+
+        gsap.fromTo('.stations .station', { y: 34, rotateX: 5, opacity: 0 }, {
+          y: 0, rotateX: 0, opacity: 1, duration: .7, stagger: .12, ease: 'power3.out',
+          scrollTrigger: { trigger: '.stations', start: 'top 78%', toggleActions: 'play none none reverse' },
+        });
+
+        gsap.fromTo('.process-line span', { height: 0 }, {
+          height: '100%', ease: 'none',
+          scrollTrigger: { trigger: '.process-timeline', start: 'top 72%', end: 'bottom 78%', scrub: true },
+        });
+
+        gsap.fromTo('.phone', { rotateY: -14, rotateZ: 0, y: 36, opacity: 0 }, {
+          rotateY: 0, rotateZ: 0, y: 0, opacity: 1, duration: 1.05, ease: 'power3.out',
+          scrollTrigger: { trigger: '.phone-wrap', start: 'top 78%', toggleActions: 'play none none reverse' },
+        });
+        gsap.to('.phone', { y: -8, duration: 2.8, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 1.1 });
+
+        gsap.fromTo('.ig-grid img', { opacity: 0, scale: .86 }, {
+          opacity: 1, scale: 1, duration: .45, stagger: .07, ease: 'power2.out',
+          scrollTrigger: { trigger: '.ig-grid', start: 'top 84%', toggleActions: 'play none none reverse' },
+        });
+
+        gsap.fromTo('.contact-title', { clipPath: 'inset(0 0 100% 0)', y: 30 }, {
+          clipPath: 'inset(0 0 0% 0)', y: 0, duration: .95, ease: 'power4.out',
+          scrollTrigger: { trigger: '.contact-panel', start: 'top 76%', toggleActions: 'play none none reverse' },
+        });
+      }
+
+      setupCarousel();
+      setupMotion();
+    </script>
 
     <script>
        const COUNT = 300;

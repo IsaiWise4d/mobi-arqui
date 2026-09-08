@@ -1,0 +1,34 @@
+---
+const postUrl = 'https://www.instagram.com/p/Da1IkzuPgWx/';
+const embedUrl = postUrl.endsWith('/') ? `${postUrl}embed` : `${postUrl}/embed`;
+---
+
+<section class="sec instagram-section" aria-labelledby="instagram-title">
+  <div class="wrap instagram-layout">
+    <div class="instagram-copy reveal" data-gsap="section-head">
+      <p class="section-index">05 / DETRÁS DEL PLANO</p>
+      <h2 class="sec-title" id="instagram-title">El taller,<br /><span>en vivo.</span></h2>
+      <p>Ideas, materiales y espacios en proceso. Conoce el día a día de Mobi antes de que el plano llegue a tu casa.</p>
+      <a class="sello instagram-cta" href="https://instagram.com/mobi_arquitectura" target="_blank" rel="noopener">Seguir en Instagram <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="phone-wrap reveal" data-gsap="phone">
+      <span class="phone-note phone-note--top">VISTA EN OBRA · IG-01</span>
+      <div class="phone" aria-label="Vista previa del perfil de Instagram de Mobi Arquitectura">
+        <div class="phone-speaker"></div>
+        <div class="phone-screen">
+          <iframe
+            src={embedUrl}
+            class="insta-iframe"
+            title="Publicación de Instagram de Mobi Arquitectura"
+            loading="lazy"
+            frameborder="0"
+            scrolling="no"
+            allowtransparency="true"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+        </div>
+      </div>
+      <span class="phone-note phone-note--bottom">@MOBI_ARQUITECTURA</span>
+    </div>
+  </div>
+</section>
