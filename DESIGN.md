@@ -15,11 +15,11 @@ colors:
   hair-soft: "color-mix(in srgb, #1b1f1e 11%, transparent)"
 typography:
   display:
-    fontFamily: "Saira Semi Condensed, Archivo, system-ui, sans-serif"
-    fontSize: "clamp(2.6rem, 7.2vw, 5.2rem)"
-    fontWeight: 700
-    lineHeight: 0.98
-    letterSpacing: "-0.015em"
+    fontFamily: "Georgia, Times New Roman, serif"
+    fontSize: "clamp(3.2rem, 8vw, 6.5rem)"
+    fontWeight: 400
+    lineHeight: 0.9
+    letterSpacing: "-0.045em"
   headline:
     fontFamily: "Saira Semi Condensed, Archivo, system-ui, sans-serif"
     fontSize: "clamp(1.9rem, 4.2vw, 2.9rem)"
@@ -74,7 +74,7 @@ La dirección visual traduce la promesa de Mobi Arquitectura a una cadena legibl
 **Key Characteristics:**
 - Lámina clara con retícula y hairlines.
 - Cajetín, códigos, coordenadas y etiquetas monoespaciadas.
-- Héroe canvas oscuro con scrub de 240 cuadros.
+- Héroe canvas oscuro con scrub de 300 cuadros.
 - Forma rectangular sin radios y acentos de esquina tipo plano.
 
 ## Colors
@@ -100,16 +100,16 @@ La paleta separa el soporte de papel de la tinta técnica, reservando el cian pa
 
 ## Typography
 
-**Display Font:** Saira Semi Condensed (con Archivo y `system-ui` como fallback)
+**Display Font:** Georgia en itálica (con Times New Roman como fallback)
 
 **Body Font:** Archivo (con `system-ui` como fallback)
 
 **Label/Mono Font:** Fragment Mono (con `ui-monospace` y Cascadia Mono como fallback)
 
-**Character:** Saira Semi Condensed aporta la voz rotulada y técnica de títulos y sellos. Archivo mantiene legible el texto explicativo; Fragment Mono convierte códigos, estados y anotaciones en instrumentación de la interfaz.
+**Character:** Georgia en itálica aporta una voz editorial y elegante al título del héroe. Saira Semi Condensed mantiene la voz rotulada de títulos y sellos; Archivo mantiene legible el texto explicativo y Fragment Mono convierte códigos, estados y anotaciones en instrumentación de la interfaz.
 
 ### Hierarchy
-- **Display** (700, `{typography.display.fontSize}`, `0.98`): título del héroe; “vida” usa el ámbar claro.
+- **Display** (400, `{typography.display.fontSize}`, `0.9`): título editorial centrado del héroe; “vida” usa el ámbar claro.
 - **Headline** (600, `{typography.headline.fontSize}`, `1.05`): títulos de sección.
 - **Title** (700, `19px`, aproximadamente `1.05`): nombres de estaciones, en mayúsculas y con tracking técnico.
 - **Body** (400, `16px`, `1.5`): lectura general; los párrafos de apoyo se mantienen en anchos cortos, hasta `58ch` o `46ch` según el contexto.
@@ -159,13 +159,13 @@ La silueta es ortogonal: los componentes no usan esquinas redondeadas (`{rounded
 - **Mobile treatment:** navegación oculta a menos de `820px`; permanece disponible mediante los anclajes del documento y el salto accesible al contenido.
 
 ### Signature Component: Héroe canvas
-El héroe monta 240 imágenes WebP (`/frames/f_001.webp` a `/frames/f_240.webp`) en un canvas que cubre el stage y recorta la imagen con `object-fit: cover` equivalente. Carga primero cada quinto frame y después el resto en lotes de ocho; el progreso del scroll selecciona el frame objetivo y actualiza `F 001/240`. El intro se desvanece después del primer tramo del scrub y el HUD desaparece cerca del final.
+El héroe monta 300 imágenes JPG (`/frames/ezgif-frame-001.jpg` a `/frames/ezgif-frame-300.jpg`) en un canvas que cubre el stage y recorta la imagen con `object-fit: cover` equivalente. Carga primero cada quinto frame y después el resto en lotes de ocho; el progreso del scroll selecciona el frame objetivo y actualiza `F 001/300`. El intro se desvanece después del primer tramo del scrub y la franja de contacto aparece al acercarse al final.
 
 Estados implementados:
-- **Loading:** status `CARGANDO SECUENCIA · 240 CUADROS`; el primer frame disponible se dibuja mientras continúa la carga.
+- **Loading:** status `CARGANDO SECUENCIA · 300 CUADROS`; el primer frame disponible se dibuja mientras continúa la carga.
 - **Reduced motion:** con `prefers-reduced-motion: reduce`, se carga solo el frame final, se muestra `VISTA FINAL · MOVIMIENTO REDUCIDO`, se ocultan HUD y acotación lateral y se desactivan las revelaciones animadas.
-- **Error/fallback:** si fallan los primeros ocho intentos antes de cargar alguno, se muestra `VISTA DE RESPALDO` junto con `f_240.webp` como fallback visible.
-- **No JavaScript:** `noscript` entrega `f_240.webp`, oculta los elementos de HUD y conserva el copy sobre un gradiente de contraste.
+- **Error/fallback:** si fallan los primeros ocho intentos antes de cargar alguno, se muestra `VISTA DE RESPALDO` junto con `ezgif-frame-300.jpg` como fallback visible.
+- **No JavaScript:** `noscript` entrega `ezgif-frame-300.jpg`, oculta los elementos de HUD y conserva el copy sobre un gradiente de contraste.
 
 ### Signature Component: Portafolio pendiente
 El bloque `#portafolio` es un plot `16:9` con coordenadas, sello `En levantamiento` y texto explícito de que aún no hay proyectos publicados. Es un placeholder de contenido, no una galería ni una afirmación de obra realizada.
@@ -188,6 +188,6 @@ El bloque `#portafolio` es un plot `16:9` con coordenadas, sello `En levantamien
 - **Don't** recomponer o redistribuir el material de frames sin resolver la provenance y los derechos del video fuente.
 
 ### Maintenance Notes
-- **Provenance de frames:** los 240 WebP provienen de la animación 3D “plano arquitectónico cobra vida”, recortada de un video de internet. El origen y los derechos de uso del video fuente siguen sin confirmar; resolverlo antes de presentar el material como activo definitivo.
+- **Provenance de frames:** los 300 JPG provienen de la animación 3D “plano arquitectónico cobra vida”, recortada de un video de internet. El origen y los derechos de uso del video fuente siguen sin confirmar; resolverlo antes de presentar el material como activo definitivo.
 - **WhatsApp:** el número está pendiente. Los sellos visibles son placeholders deliberados y tienen `sello-pending`; no convertirlos en CTA enlazado hasta confirmar el dato.
 - **Portafolio:** el bloque está pendiente de fotos reales de obra. Sustituir el plot y su copy únicamente con material propio confirmado; no rellenarlo con imágenes o resultados inventados.

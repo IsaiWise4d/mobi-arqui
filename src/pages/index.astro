@@ -21,7 +21,7 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
     />
     <meta name="theme-color" content="#f4f0e6" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preload" href="/frames/f_001.webp" as="image" fetchpriority="high" />
+    <link rel="preload" href="/frames/ezgif-frame-001.jpg" as="image" fetchpriority="high" />
     <script is:inline>
       document.documentElement.classList.add('js');
     </script>
@@ -51,27 +51,40 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
             id="scrub"
             class="hero-canvas"
             role="img"
-            aria-label="Secuencia de 240 cuadros: un plano arquitectónico cobra vida hasta volverse un interior de madera y concreto terminado"
+             aria-label="Secuencia de 300 cuadros: un plano arquitectónico cobra vida hasta volverse un interior de madera y concreto terminado"
           ></canvas>
           <img
             id="heroFallback"
             class="hero-fallback"
-            src="/frames/f_240.webp"
+             src="/frames/ezgif-frame-300.jpg"
             alt="Interior de madera y concreto con luz natural, terminado"
           />
           <noscript>
-            <img class="hero-noscript" src="/frames/f_240.webp" alt="Interior de madera y concreto con luz natural, terminado" />
+            <img class="hero-noscript" src="/frames/ezgif-frame-300.jpg" alt="Interior de madera y concreto con luz natural, terminado" />
           </noscript>
 
-          <div class="hero-intro" id="heroIntro"><h1 class="hero-title">El plano cobra <em class="vida">vida</em>.</h1><p class="hero-sub">Un solo equipo responsable: el mismo estudio que dibuja ejecuta la obra y fabrica la carpintería.</p><div class="hero-cta"><a class="sello sello-big" href={waUrl} target="_blank" rel="noopener">Cotiza por WhatsApp</a><p class="hero-note">WhatsApp · respuesta directa · <a href={igUrl} target="_blank" rel="noopener">@mobi_arquitectura ↗</a></p></div></div>
+          <div class="hero-intro" id="heroIntro">
+            <h1 class="hero-title">El plano cobra <em class="vida">vida</em>.</h1>
+            <p class="hero-sub">Diseñamos, construimos y fabricamos cada espacio con un solo equipo.</p>
+          </div>
 
           <div class="hero-hud" id="heroHud">
             <p class="hud-hint">DESLIZA PARA CONSTRUIR ↓</p>
-            <p class="hud-count" id="frameCount">F 001/240</p>
+           <p class="hud-count" id="frameCount">F 001/300</p>
           </div>
-          <p class="hero-status" id="heroStatus" role="status" aria-live="polite">CARGANDO SECUENCIA · 240 CUADROS</p>
+           <p class="hero-status" id="heroStatus" role="status" aria-live="polite">CARGANDO SECUENCIA · 300 CUADROS</p>
           <div class="hero-side" aria-hidden="true">
             <span>V.01 — PLANO → ESPACIO</span>
+          </div>
+        </div>
+        <div class="hero-bridge" id="heroBridge">
+          <div class="bridge-inner">
+            <p class="bridge-kicker">El siguiente trazo es tuyo</p>
+            <h2>Hagamos que tu espacio cobre vida.</h2>
+            <div class="bridge-actions">
+              <a class="sello sello-big" href={waUrl} target="_blank" rel="noopener">Hablemos por WhatsApp</a>
+              <a class="bridge-link" href={igUrl} target="_blank" rel="noopener">Ver nuestro trabajo <span aria-hidden="true">↗</span></a>
+            </div>
           </div>
         </div>
       </section>
@@ -231,15 +244,16 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
     </footer>
 
     <script>
-      const COUNT = 240;
-      const pad = (n) => String(n).padStart(3, '0');
-      const src = (n) => `/frames/f_${pad(n)}.webp`;
+       const COUNT = 300;
+       const pad = (n) => String(n).padStart(3, '0');
+       const src = (n) => `/frames/ezgif-frame-${pad(n)}.jpg`;
 
       const canvas = document.getElementById('scrub');
       const stage = canvas.parentElement;
       const counter = document.getElementById('frameCount');
       const intro = document.getElementById('heroIntro');
-      const hud = document.getElementById('heroHud');
+       const hud = document.getElementById('heroHud');
+       const bridge = document.getElementById('heroBridge');
       const status = document.getElementById('heroStatus');
       const fallback = document.getElementById('heroFallback');
       const hero = document.getElementById('inicio');
@@ -269,7 +283,7 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
           frames[i].naturalWidth * s,
           frames[i].naturalHeight * s
         );
-        if (counter) counter.textContent = `F ${pad(i + 1)}/240`;
+         if (counter) counter.textContent = `F ${pad(i + 1)}/300`;
         if (status) status.textContent = reduced ? 'VISTA FINAL · MOVIMIENTO REDUCIDO' : 'SECUENCIA ACTIVA · DESLIZA PARA CONSTRUIR';
       }
 
@@ -332,11 +346,11 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
           // Ease toward the scroll position so late-loading frames do not create jumps.
           displayTarget += (target - displayTarget) * 0.18;
           draw(Math.round(displayTarget));
-          if (intro && !reduced) {
-            const fade = p < 0.3 ? 1 : p < 0.55 ? 1 - (p - 0.3) / 0.25 : 0;
-            intro.style.opacity = String(fade);
-          }
-          if (hud) hud.style.opacity = p > 0.93 ? '0' : '1';
+           if (intro && !reduced) {
+             intro.classList.toggle('is-exiting', p > 0.28);
+           }
+           if (hud) hud.style.opacity = p > 0.93 ? '0' : '1';
+           if (bridge) bridge.classList.toggle('is-ready', p > 0.84);
         }
         requestAnimationFrame(tick);
       }
