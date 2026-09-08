@@ -245,37 +245,45 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
       let loaded = 0;
       let failed = 0;
 
-       function closestLoadedFrame(n) {
-         if (frames[n]) return n;
-         for (let distance = 1; distance < COUNT; distance++) {
-           const before = n - distance;
-           const after = n + distance;
-           if (before >= 0 && frames[before]) return before;
-           if (after < COUNT && frames[after]) return after;
-         }
-         return -1;
+       function frameBounds(n) {
+         const base = Math.max(0, Math.min(COUNT - 1, Math.floor(n)));
+         let before = base;
+         let after = base;
+         while (before >= 0 && !frames[before]) before--;
+         while (after < COUNT && !frames[after]) after++;
+         if (before < 0 && after >= COUNT) return null;
+         if (before < 0) before = after;
+         if (after >= COUNT) after = before;
+         return { before, after };
+       }
+
+       function paintFrame(image, alpha) {
+         const w = canvas.width;
+         const h = canvas.height;
+         const naturalWidth = image.naturalWidth || image.width;
+         const naturalHeight = image.naturalHeight || image.height;
+         const s = Math.max(w / naturalWidth, h / naturalHeight);
+         ctx.globalAlpha = alpha;
+         ctx.drawImage(image, (w - naturalWidth * s) / 2, (h - naturalHeight * s) / 2, naturalWidth * s, naturalHeight * s);
        }
 
        function draw(n) {
-         const i = closestLoadedFrame(n);
-         if (i < 0 || i === drawn) return;
-        drawn = i;
-        const w = canvas.width;
-        const h = canvas.height;
-        const s = Math.max(w / frames[i].naturalWidth, h / frames[i].naturalHeight);
-        ctx.drawImage(
-          frames[i],
-          (w - frames[i].naturalWidth * s) / 2,
-          (h - frames[i].naturalHeight * s) / 2,
-          frames[i].naturalWidth * s,
-          frames[i].naturalHeight * s
-        );
-         if (counter) counter.textContent = `F ${pad(i + 1)}/300`;
+         const bounds = frameBounds(n);
+         if (!bounds) return;
+         const { before, after } = bounds;
+         const blend = before === after ? 0 : (n - before) / (after - before);
+         ctx.clearRect(0, 0, canvas.width, canvas.height);
+         ctx.imageSmoothingEnabled = true;
+         paintFrame(frames[before], 1 - blend);
+         if (after !== before) paintFrame(frames[after], blend);
+         ctx.globalAlpha = 1;
+         drawn = n;
+         if (counter) counter.textContent = `F ${pad(Math.round(n) + 1)}/300`;
         if (status) status.textContent = reduced ? 'VISTA FINAL · MOVIMIENTO REDUCIDO' : 'SECUENCIA ACTIVA · DESLIZA PARA CONSTRUIR';
       }
 
-      function sizeCanvas() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+       function sizeCanvas() {
+         const dpr = mobileViewport ? 1 : Math.min(window.devicePixelRatio || 1, 2);
         canvas.width = Math.max(1, Math.round(stage.clientWidth * dpr));
         canvas.height = Math.max(1, Math.round(stage.clientHeight * dpr));
         drawn = -1;
@@ -291,10 +299,11 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
             const im = new Image();
              im.decoding = 'async';
              im.fetchPriority = mobileViewport && n % 3 === 0 ? 'high' : 'low';
-            im.onload = () => {
+             im.onload = async () => {
+               try { await im.decode(); } catch {}
               frames[n] = im;
               loaded += 1;
-              draw(target);
+              draw(displayTarget);
             };
             im.onerror = () => {
               failed += 1;
@@ -334,7 +343,7 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
           target = Math.round(p * (COUNT - 1));
           // Ease toward the scroll position so the canvas does not skip visibly on touch scroll.
           displayTarget += (target - displayTarget) * (mobileViewport ? 0.12 : 0.18);
-          draw(Math.round(displayTarget));
+          draw(displayTarget);
            if (intro && !reduced) {
              intro.classList.toggle('is-exiting', p > 0.28);
            }
