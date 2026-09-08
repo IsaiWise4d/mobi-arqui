@@ -220,9 +220,14 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
     </script>
 
     <script>
-       const COUNT = 300;
+       const TOTAL_FRAMES = 300;
+       const mobileViewport = window.matchMedia('(max-width: 700px)').matches;
+       const COUNT = mobileViewport ? 150 : TOTAL_FRAMES;
        const pad = (n) => String(n).padStart(3, '0');
-       const src = (n) => `/frames/ezgif-frame-${pad(n)}.jpg`;
+       const sourceFrame = (n) => mobileViewport ? Math.min(TOTAL_FRAMES - 1, n * 2) : n;
+       const src = (n) => mobileViewport
+         ? `/frames-webp/ezgif-frame-${pad(sourceFrame(n) + 1)}.webp`
+         : `/frames/ezgif-frame-${pad(n + 1)}.jpg`;
 
       const canvas = document.getElementById('scrub');
       const stage = canvas.parentElement;
@@ -235,7 +240,6 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
        const hero = document.getElementById('inicio');
        const siteNav = document.getElementById('siteNav');
        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-       const mobileViewport = window.matchMedia('(max-width: 700px)').matches;
        const ctx = canvas.getContext('2d');
       const frames = new Array(COUNT).fill(null);
       let drawn = -1;
@@ -270,12 +274,12 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
           frames[i].naturalWidth * s,
           frames[i].naturalHeight * s
         );
-         if (counter) counter.textContent = `F ${pad(i + 1)}/300`;
+         if (counter) counter.textContent = `F ${pad(sourceFrame(i) + 1)}/${TOTAL_FRAMES}`;
         if (status) status.textContent = reduced ? 'VISTA FINAL · MOVIMIENTO REDUCIDO' : 'SECUENCIA ACTIVA · DESLIZA PARA CONSTRUIR';
       }
 
       function sizeCanvas() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+         const dpr = mobileViewport ? 1.25 : Math.min(window.devicePixelRatio || 1, 2);
         canvas.width = Math.max(1, Math.round(stage.clientWidth * dpr));
         canvas.height = Math.max(1, Math.round(stage.clientHeight * dpr));
         drawn = -1;
@@ -291,10 +295,15 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
             const im = new Image();
              im.decoding = 'async';
              im.fetchPriority = mobileViewport && n % 3 === 0 ? 'high' : 'low';
-            im.onload = () => {
-              frames[n] = im;
-              loaded += 1;
-              draw(target);
+             im.onload = async () => {
+               try {
+                 await im.decode();
+               } catch {
+                 // The browser can still draw an image when decode() is unavailable.
+               }
+               frames[n] = im;
+               loaded += 1;
+               draw(target);
             };
             im.onerror = () => {
               failed += 1;
@@ -311,7 +320,7 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
       }
 
        const order = [];
-       const priorityStride = mobileViewport ? 3 : 5;
+       const priorityStride = mobileViewport ? 1 : 5;
        for (let n = 0; n < COUNT; n += priorityStride) order.push(n);
        for (let n = 0; n < COUNT; n++) if (n % priorityStride !== 0) order.push(n);
 
