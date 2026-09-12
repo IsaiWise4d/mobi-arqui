@@ -1504,7 +1504,10 @@ html:not(.js) .hero-intro::before {
 }
 
 @media (max-width: 600px) {
-  .hero-stage { height: 100svh; height: 100dvh; }
+  /* Mobile hero stage uses a FIXED 90% of the viewport (svh, not dvh): the
+     URL toolbar on phones expands/collapses mid-scroll, and dvh/100% resize
+     the sticky stage every frame → the canvas re-buffers and the scrub jerks. */
+  .hero-stage { height: 90vh; height: 90svh; }
   .services-section { padding-top: clamp(54px, 8vh, 82px); }
   .services-section .sec-head { margin-bottom: 34px; }
   .services-section .sec-title { font-size: clamp(2rem, 9vw, 2.7rem); line-height: .98; }

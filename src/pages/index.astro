@@ -388,8 +388,14 @@ const ogImage = '/frames/ezgif-frame-300.jpg';
 
       function sizeCanvas() {
          const dpr = mobileViewport ? 1.25 : Math.min(window.devicePixelRatio || 1, 2);
-        canvas.width = Math.max(1, Math.round(stage.clientWidth * dpr));
-        canvas.height = Math.max(1, Math.round(stage.clientHeight * dpr));
+        const w = Math.max(1, Math.round(stage.clientWidth * dpr));
+        const h = Math.max(1, Math.round(stage.clientHeight * dpr));
+        // Only re-allocate the buffer when the size actually changed. The
+        // sticky stage can report sub-pixel shifts while scrolling, and
+        // re-assigning canvas.width/height forces a repaint each time.
+        if (canvas.width === w && canvas.height === h) return;
+        canvas.width = w;
+        canvas.height = h;
         drawn = -1;
         draw(target);
       }
@@ -544,11 +550,13 @@ const ogImage = '/frames/ezgif-frame-300.jpg';
         schedulePump(0);
         // Native scroll position is the single source of truth — same section
         // math as before, now owned by ScrollTrigger with refresh on settle.
-        // Progress is measured from live geometry on every update: on mobile
-        // the viewport height shifts (toolbars, dvh), which would leave any
-        // cached end position stale and the last frames unreachable.
+        // Progress is measured from live geometry on every update, but the
+        // total range is measured against the STAGE's own height (sticky and
+        // stable) rather than window.innerHeight: on mobile the URL toolbar
+        // collapses mid-scroll and dvh/innerHeight shift, which would make the
+        // frame mapping jump even though the finger moves the same amount.
         const liveProgress = () => {
-          const total = hero.offsetHeight - window.innerHeight;
+          const total = hero.offsetHeight - stage.offsetHeight;
           if (total <= 0) return 0;
           return Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / total));
         };
