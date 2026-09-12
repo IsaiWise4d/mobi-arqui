@@ -1,0 +1,63 @@
+---
+import { servicios } from '../data/sitio';
+---
+
+<section class="sec showcase servicios-section" id="servicios" aria-labelledby="servicios-title">
+  <div class="wrap">
+    <div class="showcase-heading reveal" data-gsap="section-head">
+      <div>
+        <p class="section-index">01 / SERVICIOS INTEGRALES</p>
+        <h2 class="sec-title" id="servicios-title">Del plano al mueble,<br /><span>sin cambiar de manos.</span></h2>
+      </div>
+      <p class="showcase-intro">
+        Un solo responsable coordina el diseño, la obra y la carpintería de tu proyecto en Barranquilla — sin
+        intermediarios ni contratistas sueltos.
+      </p>
+    </div>
+
+    <div class="chain-dim" aria-hidden="true">
+      <p class="dim-label">Un solo responsable</p>
+      <div class="dim-line"></div>
+    </div>
+
+    <div class="embla" data-carousel aria-roledescription="carrusel" aria-label="Servicios de Mobi Arquitectura">
+      <div class="embla__viewport">
+        <div class="embla__container svc-rail">
+          {
+            servicios.map((s, i) => (
+              <article
+                class="svc-card service-slide"
+                aria-roledescription="diapositiva"
+                aria-label={`${i + 1} de ${servicios.length}`}
+              >
+                <div class="service-image">
+                  <img src={s.foto} loading="lazy" alt={s.alt} />
+                </div>
+                <div class="service-copy">
+                  <p class="row-code">
+                    {s.codigo} / {s.area}
+                  </p>
+                  <h3>{s.titulo}</h3>
+                  <p>{s.descripcion}</p>
+                  <a href={`?cotiza=${s.codigo}#cotizador`} class="text-link" data-cotiza={s.codigo}>
+                    {s.cta} <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+      <div class="carousel-controls">
+        <button class="carousel-button" type="button" data-carousel-prev aria-label="Servicio anterior">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7M8 12h10" /></svg>
+        </button>
+        <div class="carousel-progress" aria-hidden="true"><span></span></div>
+        <p class="carousel-count"><span data-carousel-current>01</span> / 04</p>
+        <button class="carousel-button" type="button" data-carousel-next aria-label="Siguiente servicio">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5l7 7-7 7M16 12H6" /></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,28 @@
+---
+import { faq } from '../data/sitio';
+---
+
+<section class="sec faq-section faq-section--paper" id="faq" aria-labelledby="faq-title">
+  <div class="wrap">
+    <div class="sec-head reveal" data-gsap="section-head">
+      <p class="section-index">06 / PREGUNTAS FRECUENTES</p>
+      <h2 class="sec-title" id="faq-title">Antes de<br /><span>escribirnos.</span></h2>
+    </div>
+    <div class="faq-list reveal">
+      {
+        faq.map((f, i) => (
+          <details class="faq-item" name="faq">
+            <summary>
+              <span class="faq-code" aria-hidden="true">Q-{String(i + 1).padStart(2, '0')}</span>
+              <span class="faq-q">{f.q}</span>
+              <span class="faq-icon" aria-hidden="true" />
+            </summary>
+            <div class="faq-body">
+              <p>{f.a}</p>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

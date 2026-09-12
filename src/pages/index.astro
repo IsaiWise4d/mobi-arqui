@@ -6,29 +6,43 @@ import '@fontsource/archivo/500.css';
 import '@fontsource/fragment-mono/400.css';
 import '../styles/global.css';
 import ServiceRibbon from '../components/ServiceRibbon.astro';
-import Servicios from '../components/Servicios.astro';
-import ServiciosCarousel from '../components/ServiciosCarousel.astro';
+import ServiciosIntegrales from '../components/ServiciosIntegrales.astro';
 import Proceso from '../components/Proceso.astro';
-import Portafolio from '../components/Portafolio.astro';
+import Indicadores from '../components/Indicadores.astro';
+import Proyectos from '../components/Proyectos.astro';
 import Instagram from '../components/Instagram.astro';
+import Faq from '../components/Faq.astro';
+import Nosotros from '../components/Nosotros.astro';
+import Cotizador from '../components/Cotizador.astro';
 import Contacto from '../components/Contacto.astro';
+import { waLink, marca } from '../data/sitio';
 
-const igUrl = 'https://instagram.com/mobi_arquitectura';
-const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encontré Mobi Arquitectura en su sitio web y me gustaría cotizar un proyecto.')}`;
+const waUrl = waLink();
+const ogImage = '/frames/ezgif-frame-300.jpg';
 ---
 
-<html lang="es-MX">
+<html lang="es-CO">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Mobi Arquitectura · El plano cobra vida</title>
+    <title>Mobi Arquitectura | Carpintería, Diseño y Obra Civil en Barranquilla</title>
     <meta
       name="description"
       content="Carpintería arquitectónica, diseño de mobiliario, obra civil y acabados en Barranquilla, Colombia. Un solo equipo para llevar tu idea a la realidad."
     />
+    <meta property="og:title" content="Mobi Arquitectura | Carpintería, Diseño y Obra Civil en Barranquilla" />
+    <meta
+      property="og:description"
+      content="Carpintería arquitectónica, diseño de mobiliario, obra civil y acabados en Barranquilla, Colombia. Un solo equipo para llevar tu idea a la realidad."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="es_CO" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#f4f0e6" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preload" href="/frames/ezgif-frame-001.jpg" as="image" fetchpriority="high" />
+    <link rel="preload" href="/frames/ezgif-frame-001.jpg" as="image" fetchpriority="high" media="(min-width: 701px)" />
+    <link rel="preload" href="/frames-webp/ezgif-frame-001.webp" as="image" fetchpriority="high" media="(max-width: 700px)" />
     <script is:inline>
       document.documentElement.classList.add('js');
     </script>
@@ -43,17 +57,42 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
       </a>
       <nav aria-label="Secciones">
         <a href="#servicios">Servicios</a>
-        <a href="#portafolio">Portafolio</a>
+        <a href="#proyectos">Proyectos</a>
+        <a href="#cotizador">Cotizador</a>
         <a href="#contacto">Contacto</a>
       </nav>
-      <a class="sello sello-nav" href={waUrl} target="_blank" rel="noopener" aria-label="Cotiza por WhatsApp">
-        Cotiza por WhatsApp
-      </a>
+      <div class="nav-actions">
+        <a class="sello sello-nav" href={waUrl} target="_blank" rel="noopener" aria-label="Cotiza por WhatsApp">
+          Cotiza por WhatsApp
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menuPanel" aria-label="Abrir menú de secciones">
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </header>
+
+    <div class="menu-panel" id="menuPanel" hidden>
+      <nav aria-label="Índice de secciones">
+        <a href="#servicios"><b>01</b>Servicios integrales</a>
+        <a href="#metodo"><b>02</b>Método de trabajo</a>
+        <a href="#proyectos"><b>04</b>Proyectos</a>
+        <a href="#faq"><b>06</b>Preguntas frecuentes</a>
+        <a href="#cotizador"><b>08</b>Cotización rápida</a>
+        <a href="#contacto"><b>—</b>Contacto</a>
+      </nav>
+    </div>
 
     <main id="contenido">
       <section class="hero" id="inicio" aria-label="El plano cobra vida">
         <div class="hero-stage">
+          <img
+            id="heroPoster"
+            class="hero-poster"
+            alt=""
+            aria-hidden="true"
+            fetchpriority="high"
+          />
           <canvas
             id="scrub"
             class="hero-canvas"
@@ -63,7 +102,6 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
           <img
             id="heroFallback"
             class="hero-fallback"
-             src="/frames/ezgif-frame-300.jpg"
             alt="Interior de madera y concreto con luz natural, terminado"
           />
           <noscript>
@@ -71,6 +109,7 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
           </noscript>
 
           <div class="hero-intro" id="heroIntro">
+            <p class="hero-eyebrow">CARPINTERÍA · DISEÑO · OBRA CIVIL — BARRANQUILLA</p>
             <h1 class="hero-title">El plano cobra <em class="vida">vida</em>.</h1>
             <p class="hero-sub">Diseñamos, construimos y fabricamos cada espacio con un solo equipo.</p>
           </div>
@@ -90,18 +129,21 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
             <h2>Hagamos que tu espacio cobre vida.</h2>
             <div class="bridge-actions">
               <a class="sello sello-big" href={waUrl} target="_blank" rel="noopener">Hablemos por WhatsApp</a>
-              <a class="bridge-link" href={igUrl} target="_blank" rel="noopener">Ver nuestro trabajo <span aria-hidden="true">↗</span></a>
+              <a class="bridge-link" href={marca.instagram} target="_blank" rel="noopener">Ver nuestro trabajo <span aria-hidden="true">↗</span></a>
             </div>
           </div>
         </div>
       </section>
 
        <ServiceRibbon />
-       <Servicios />
-       <ServiciosCarousel />
+       <ServiciosIntegrales />
        <Proceso />
-       <Portafolio />
+       <Indicadores />
+       <Proyectos />
        <Instagram />
+       <Faq />
+       <Nosotros />
+       <Cotizador />
        <Contacto />
     </main>
 
@@ -113,8 +155,9 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
         </a>
         <nav class="pie-links" aria-label="Enlaces del pie de página">
           <a href="#servicios">Servicios</a>
-          <a href="#portafolio">Portafolio</a>
-          <a href={igUrl} target="_blank" rel="noopener">Instagram</a>
+          <a href="#proyectos">Proyectos</a>
+          <a href="#cotizador">Cotizador</a>
+          <a href={marca.instagram} target="_blank" rel="noopener">Instagram</a>
           <a href="#contacto">Contacto</a>
         </nav>
         <div class="pie-meta">
@@ -137,18 +180,20 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
         const root = document.querySelector('[data-carousel]');
         if (!root) return;
         const viewport = root.querySelector('.embla__viewport');
+        const container = root.querySelector('.embla__container');
         const previous = root.querySelector('[data-carousel-prev]');
         const next = root.querySelector('[data-carousel-next]');
         const current = root.querySelector('[data-carousel-current]');
         const progress = root.querySelector('.carousel-progress span');
-        const autoplay = reducedMotion ? null : Autoplay({ delay: 4600, stopOnInteraction: false, stopOnMouseEnter: true });
-        const embla = EmblaCarousel(viewport, { loop: true, align: 'start', duration: 35 }, autoplay ? [autoplay] : []);
         const slides = root.querySelectorAll('.service-slide');
+        const mql = window.matchMedia('(max-width: 760px)');
+        let embla: ReturnType<typeof EmblaCarousel> | null = null;
 
         const update = () => {
+          if (!embla) return;
           const index = embla.selectedScrollSnap();
-          current.textContent = String(index + 1).padStart(2, '0');
-          progress.style.transform = `scaleX(${(index + 1) / slides.length})`;
+          if (current) current.textContent = String(index + 1).padStart(2, '0');
+          if (progress) progress.style.transform = `scaleX(${(index + 1) / slides.length})`;
           slides.forEach((slide, slideIndex) => {
             const isCurrent = slideIndex === index;
             slide.setAttribute('aria-hidden', String(!isCurrent));
@@ -159,11 +204,30 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
           }
         };
 
-        previous.addEventListener('click', () => embla.scrollPrev());
-        next.addEventListener('click', () => embla.scrollNext());
-        embla.on('select', update);
-        embla.on('init', update);
-        update();
+        const init = () => {
+          if (embla || !mql.matches || !viewport) return;
+          const autoplay = reducedMotion ? null : Autoplay({ delay: 4600, stopOnInteraction: false, stopOnMouseEnter: true });
+          embla = EmblaCarousel(viewport, { loop: true, align: 'start', duration: 35 }, autoplay ? [autoplay] : []);
+          embla.on('select', update);
+          embla.on('init', update);
+          update();
+        };
+
+        const destroy = () => {
+          if (!embla) return;
+          embla.destroy();
+          embla = null;
+          if (container) container.style.transform = '';
+          slides.forEach((slide) => {
+            slide.removeAttribute('aria-hidden');
+            slide.inert = false;
+          });
+        };
+
+        previous?.addEventListener('click', () => embla?.scrollPrev());
+        next?.addEventListener('click', () => embla?.scrollNext());
+        mql.addEventListener('change', (e) => (e.matches ? init() : destroy()));
+        init();
       }
 
       function setupMotion() {
@@ -179,20 +243,20 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
             filter: 'blur(0px)',
             duration: .72,
             ease: 'power3.out',
-            scrollTrigger: { trigger: element, start: 'top 86%', toggleActions: 'play none none reverse' },
+            scrollTrigger: { trigger: element, start: 'top 86%', toggleActions: 'play none none none' },
           });
         });
 
         gsap.utils.toArray('[data-gsap="section-head"] h2').forEach((title) => {
           gsap.fromTo(title, { clipPath: 'inset(0 0 100% 0)', y: 18 }, {
             clipPath: 'inset(0 0 0% 0)', y: 0, duration: .85, ease: 'power4.out',
-            scrollTrigger: { trigger: title, start: 'top 82%', toggleActions: 'play none none reverse' },
+            scrollTrigger: { trigger: title, start: 'top 82%', toggleActions: 'play none none none' },
           });
         });
 
-        gsap.fromTo('.stations .station', { y: 34, rotateX: 5, opacity: 0 }, {
-          y: 0, rotateX: 0, opacity: 1, duration: .7, stagger: .12, ease: 'power3.out',
-          scrollTrigger: { trigger: '.stations', start: 'top 78%', toggleActions: 'play none none reverse' },
+        gsap.fromTo('.svc-card', { y: 34, opacity: 0 }, {
+          y: 0, opacity: 1, duration: .7, stagger: .1, ease: 'power3.out',
+          scrollTrigger: { trigger: '.svc-rail', start: 'top 78%', toggleActions: 'play none none none' },
         });
 
         gsap.fromTo('.process-line span', { height: 0 }, {
@@ -202,16 +266,12 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
 
         gsap.fromTo('.phone', { rotateY: -14, rotateZ: 0, y: 36, opacity: 0 }, {
           rotateY: 0, rotateZ: 0, y: 0, opacity: 1, duration: 1.05, ease: 'power3.out',
-          scrollTrigger: { trigger: '.phone-wrap', start: 'top 78%', toggleActions: 'play none none reverse' },
-        });
-        gsap.fromTo('.ig-grid img', { opacity: 0, scale: .86 }, {
-          opacity: 1, scale: 1, duration: .45, stagger: .07, ease: 'power2.out',
-          scrollTrigger: { trigger: '.ig-grid', start: 'top 84%', toggleActions: 'play none none reverse' },
+          scrollTrigger: { trigger: '.phone-wrap', start: 'top 78%', toggleActions: 'play none none none' },
         });
 
         gsap.fromTo('.contact-title', { clipPath: 'inset(0 0 100% 0)', y: 30 }, {
           clipPath: 'inset(0 0 0% 0)', y: 0, duration: .95, ease: 'power4.out',
-          scrollTrigger: { trigger: '.contact-panel', start: 'top 76%', toggleActions: 'play none none reverse' },
+          scrollTrigger: { trigger: '.contact-panel', start: 'top 76%', toggleActions: 'play none none none' },
         });
       }
 
@@ -220,14 +280,37 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
     </script>
 
     <script>
-       const TOTAL_FRAMES = 300;
+       import gsap from 'gsap';
+       import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+       gsap.registerPlugin(ScrollTrigger);
+
+       // Scroll-scrubbed visual sequence.
+       // Skill: scroll-scrubbed-visual-sequence — one normalized progress value
+       // drives the canvas renderer and every overlay layer (intro/HUD/bridge).
+       const HERO_SEQUENCE = {
+         totalFrames: 300,
+         mobileFrames: 150,
+         smoothing: 0.18,
+         mobileSmoothing: 0.12,
+         batchSize: 8,
+         batchDelayMs: 24,
+          staleDistance: 48,
+          loadWindow: 24,
+         copyStops: { introExit: 0.28, bridgeReady: 0.84, hudFade: 0.93 },
+         statusLoading: 'CARGANDO SECUENCIA · 300 CUADROS',
+         statusActive: 'SECUENCIA ACTIVA · DESLIZA PARA CONSTRUIR',
+         statusFinal: 'VISTA FINAL · MOVIMIENTO REDUCIDO',
+         statusError: 'SECUENCIA NO DISPONIBLE · VISTA DE RESPALDO',
+       };
        const mobileViewport = window.matchMedia('(max-width: 700px)').matches;
-       const COUNT = mobileViewport ? 150 : TOTAL_FRAMES;
+       const COUNT = mobileViewport ? HERO_SEQUENCE.mobileFrames : HERO_SEQUENCE.totalFrames;
+       const SMOOTHING = mobileViewport ? HERO_SEQUENCE.mobileSmoothing : HERO_SEQUENCE.smoothing;
        const pad = (n) => String(n).padStart(3, '0');
-       const sourceFrame = (n) => mobileViewport ? Math.min(TOTAL_FRAMES - 1, n * 2) : n;
-       const src = (n) => mobileViewport
-         ? `/frames-webp/ezgif-frame-${pad(sourceFrame(n) + 1)}.webp`
-         : `/frames/ezgif-frame-${pad(n + 1)}.jpg`;
+        const sourceFrame = (n) => (mobileViewport ? Math.round((n * (HERO_SEQUENCE.totalFrames - 1)) / (HERO_SEQUENCE.mobileFrames - 1)) : n);
+       const frameSrc = (i) => (mobileViewport
+         ? `/frames-webp/ezgif-frame-${pad(sourceFrame(i) + 1)}.webp`
+         : `/frames/ezgif-frame-${pad(i + 1)}.jpg`);
 
       const canvas = document.getElementById('scrub');
       const stage = canvas.parentElement;
@@ -237,17 +320,37 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
        const bridge = document.getElementById('heroBridge');
       const status = document.getElementById('heroStatus');
       const fallback = document.getElementById('heroFallback');
+       const poster = document.getElementById('heroPoster');
        const hero = document.getElementById('inicio');
        const siteNav = document.getElementById('siteNav');
        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
        const ctx = canvas.getContext('2d');
       const frames = new Array(COUNT).fill(null);
+      const pending = [];
+      const inflight = new Map();
+      let pumpTimer = 0;
       let drawn = -1;
+      let firstPaint = false;
       let target = reduced ? COUNT - 1 : 0;
       let displayTarget = target;
-      let running = true;
+      let easeId = 0;
+      let heroInView = true;
+      let heroST = null;
       let loaded = 0;
       let failed = 0;
+      let introExited = false;
+      let hudFaded = false;
+      let bridgeIsReady = false;
+
+      const clampIndex = (n) => Math.min(COUNT - 1, Math.max(0, n));
+
+      function setStatus(text) {
+        if (status && status.textContent !== text) status.textContent = text;
+      }
+
+      // Poster (first frame) is requested up front and stays visible until the
+      // first real canvas frame paints — no black flash on first paint.
+      if (poster && !poster.src) poster.src = frameSrc(0);
 
        function closestLoadedFrame(n) {
          if (frames[n]) return n;
@@ -261,7 +364,7 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
        }
 
        function draw(n) {
-         const i = closestLoadedFrame(n);
+         const i = closestLoadedFrame(clampIndex(n));
          if (i < 0 || i === drawn) return;
         drawn = i;
         const w = canvas.width;
@@ -274,8 +377,13 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
           frames[i].naturalWidth * s,
           frames[i].naturalHeight * s
         );
-         if (counter) counter.textContent = `F ${pad(sourceFrame(i) + 1)}/${TOTAL_FRAMES}`;
-        if (status) status.textContent = reduced ? 'VISTA FINAL · MOVIMIENTO REDUCIDO' : 'SECUENCIA ACTIVA · DESLIZA PARA CONSTRUIR';
+         if (counter) counter.textContent = `F ${pad(sourceFrame(i) + 1)}/${HERO_SEQUENCE.totalFrames}`;
+        if (!firstPaint) {
+          // First real frame: hide the poster, announce the live sequence.
+          firstPaint = true;
+          poster?.classList.add('is-hidden');
+          setStatus(reduced ? HERO_SEQUENCE.statusFinal : HERO_SEQUENCE.statusActive);
+        }
       }
 
       function sizeCanvas() {
@@ -286,91 +394,212 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
         draw(target);
       }
 
-      function loadBatch(indices) {
-        let k = 0;
-        const step = () => {
-          const end = Math.min(k + 8, indices.length);
-          for (; k < end; k++) {
-            const n = indices[k];
-            const im = new Image();
-             im.decoding = 'async';
-             im.fetchPriority = mobileViewport && n % 3 === 0 ? 'high' : 'low';
-             im.onload = async () => {
-               try {
-                 await im.decode();
-               } catch {
-                 // The browser can still draw an image when decode() is unavailable.
-               }
-               frames[n] = im;
-               loaded += 1;
-               draw(target);
-            };
-            im.onerror = () => {
-              failed += 1;
-              if (status && loaded === 0 && failed >= 8) {
-                status.textContent = 'SECUENCIA NO DISPONIBLE · VISTA DE RESPALDO';
-                fallback?.classList.add('is-visible');
-              }
-            };
-            im.src = src(n + 1);
-          }
-          if (k < indices.length) setTimeout(step, 24);
-        };
-        step();
+      // Image-sequence loader: frames are fetched in a moving window around
+      // the scroll target, so the browser only pays for what the user watches;
+      // stale in-flight requests far from the target are cancelled while
+      // fast scrolling.
+      function sortPending() {
+        pending.sort((a, b) => Math.abs(a - target) - Math.abs(b - target));
       }
 
-       const order = [];
-       const priorityStride = mobileViewport ? 1 : 5;
-       for (let n = 0; n < COUNT; n += priorityStride) order.push(n);
-       for (let n = 0; n < COUNT; n++) if (n % priorityStride !== 0) order.push(n);
-
-      if (reduced) {
-        document.documentElement.classList.add('static-hero');
-        loadBatch([COUNT - 1]);
-      } else {
-        loadBatch(order);
+      function schedulePump(delay) {
+        if (pumpTimer) return;
+        pumpTimer = window.setTimeout(pump, delay);
       }
 
-      function progress() {
-        const total = hero.offsetHeight - window.innerHeight;
-        if (total <= 0) return 0;
-        return Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / total));
-      }
-
-      function tick() {
-        if (running && !reduced) {
-          const p = progress();
-          target = Math.round(p * (COUNT - 1));
-          // Ease toward the scroll position so the canvas does not skip visibly on touch scroll.
-          displayTarget += (target - displayTarget) * (mobileViewport ? 0.12 : 0.18);
-          draw(Math.round(displayTarget));
-           if (intro && !reduced) {
-             intro.classList.toggle('is-exiting', p > 0.28);
-           }
-           if (hud) hud.style.opacity = p > 0.93 ? '0' : '1';
-           if (bridge) bridge.classList.toggle('is-ready', p > 0.84);
+      function pump() {
+        pumpTimer = 0;
+        if (document.hidden) {
+          schedulePump(240);
+          return;
         }
-        requestAnimationFrame(tick);
+        for (const [index, im] of inflight) {
+          if (Math.abs(index - target) > HERO_SEQUENCE.staleDistance && pending.length > 0) {
+            im.onload = null;
+            im.onerror = null;
+            try {
+              im.src = '';
+            } catch {
+              // Aborting a load this way is best-effort.
+            }
+            inflight.delete(index);
+          }
+        }
+        sortPending();
+        const end = Math.min(HERO_SEQUENCE.batchSize, pending.length);
+        for (let k = 0; k < end; k++) {
+          const n = pending.shift();
+          const im = new Image();
+          im.decoding = 'async';
+          if (mobileViewport && n % 3 === 0) im.fetchPriority = 'high';
+          inflight.set(n, im);
+          im.onload = async () => {
+            inflight.delete(n);
+            try {
+              await im.decode();
+            } catch {
+              // The browser can still draw an image when decode() is unavailable.
+            }
+            frames[n] = im;
+            loaded += 1;
+            draw(Math.round(displayTarget));
+            schedulePump(0);
+          };
+          im.onerror = () => {
+            inflight.delete(n);
+            failed += 1;
+            if (loaded === 0 && failed >= 8) {
+              setStatus(HERO_SEQUENCE.statusError);
+              if (fallback && !fallback.src) {
+                fallback.src = mobileViewport ? '/frames-webp/ezgif-frame-300.webp' : '/frames/ezgif-frame-300.jpg';
+              }
+              fallback?.classList.add('is-visible');
+            }
+            schedulePump(0);
+          };
+          im.src = frameSrc(n);
+        }
+        if (pending.length > 0 || inflight.size > 0) schedulePump(HERO_SEQUENCE.batchDelayMs);
+      }
+
+       function queueWindow() {
+         const from = Math.max(0, target - HERO_SEQUENCE.loadWindow);
+         const to = Math.min(COUNT - 1, target + HERO_SEQUENCE.loadWindow);
+         for (let n = from; n <= to; n++) {
+           if (!frames[n] && !inflight.has(n) && !pending.includes(n)) pending.push(n);
+         }
+         sortPending();
+         if (pending.length > 0) schedulePump(0);
+       }
+
+      // Overlay layers follow the same normalized progress (copyStops), so the
+      // same scroll position always reproduces the same state — forward or back.
+      function applyLayers(p) {
+        if (reduced) return;
+        const stops = HERO_SEQUENCE.copyStops;
+        const exit = p > stops.introExit;
+        if (exit !== introExited) {
+          introExited = exit;
+          intro?.classList.toggle('is-exiting', exit);
+        }
+        const fade = p > stops.hudFade;
+        if (fade !== hudFaded) {
+          hudFaded = fade;
+          hud?.classList.toggle('is-faded', fade);
+        }
+        const ready = p > stops.bridgeReady;
+        if (ready !== bridgeIsReady) {
+          bridgeIsReady = ready;
+          bridge?.classList.toggle('is-ready', ready);
+        }
+      }
+
+      // Optional smoothing runs only while the canvas settles toward the
+      // scroll target — no always-on rAF loop.
+      function easeStep() {
+        easeId = 0;
+        displayTarget += (target - displayTarget) * SMOOTHING;
+        if (Math.abs(target - displayTarget) < 0.02) displayTarget = target;
+        draw(Math.round(displayTarget));
+        applyLayers(displayTarget / (COUNT - 1));
+        if (displayTarget !== target && heroInView && !document.hidden) {
+          easeId = requestAnimationFrame(easeStep);
+        }
+      }
+
+      function requestEase() {
+        if (reduced || easeId !== 0 || !heroInView || document.hidden) return;
+        if (displayTarget !== target) easeId = requestAnimationFrame(easeStep);
+      }
+
+      function setProgress(p) {
+        const next = clampIndex(Math.round(p * (COUNT - 1)));
+        applyLayers(p);
+         if (next !== target) {
+           target = next;
+           queueWindow();
+           requestEase();
+         }
       }
 
       new ResizeObserver(sizeCanvas).observe(stage);
       sizeCanvas();
       new IntersectionObserver((entries) => {
-        running = entries[0].isIntersecting;
+        heroInView = entries[0].isIntersecting;
+        if (heroInView) requestEase();
       }).observe(hero);
-      requestAnimationFrame(tick);
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          if (pending.length > 0 || inflight.size > 0) schedulePump(0);
+          requestEase();
+        }
+      });
+
+      if (reduced) {
+        document.documentElement.classList.add('static-hero');
+        pending.push(COUNT - 1);
+        schedulePump(0);
+      } else {
+        queueWindow();
+        schedulePump(0);
+        // Native scroll position is the single source of truth — same section
+        // math as before, now owned by ScrollTrigger with refresh on settle.
+        // Progress is measured from live geometry on every update: on mobile
+        // the viewport height shifts (toolbars, dvh), which would leave any
+        // cached end position stale and the last frames unreachable.
+        const liveProgress = () => {
+          const total = hero.offsetHeight - window.innerHeight;
+          if (total <= 0) return 0;
+          return Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / total));
+        };
+        heroST = ScrollTrigger.create({
+          trigger: hero,
+          start: 'top top',
+          end: 'bottom bottom',
+          invalidateOnRefresh: true,
+          onUpdate: () => setProgress(liveProgress()),
+        });
+        setProgress(liveProgress());
+        window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
+        if (document.fonts?.ready) {
+          document.fonts.ready.then(() => ScrollTrigger.refresh()).catch(() => {});
+        }
+      }
+
+      // Static page: release the ScrollTrigger and timers when leaving.
+      window.addEventListener('pagehide', () => {        heroST?.kill();
+        if (easeId) cancelAnimationFrame(easeId);
+        if (pumpTimer) {
+          clearTimeout(pumpTimer);
+          pumpTimer = 0;
+        }
+      });
 
       let lastScrollY = window.scrollY;
       let scrollFrame = 0;
+      const navToggle = document.querySelector('.nav-toggle');
+      const menuPanel = document.getElementById('menuPanel');
+      const isMenuOpen = () => navToggle?.getAttribute('aria-expanded') === 'true';
+      function setMenuOpen(open) {
+        if (!navToggle || !menuPanel) return;
+        navToggle.setAttribute('aria-expanded', String(open));
+        menuPanel.hidden = !open;
+        navToggle.setAttribute('aria-label', open ? 'Cerrar menú de secciones' : 'Abrir menú de secciones');
+        if (open) {
+          siteNav?.classList.remove('is-hidden');
+          menuPanel.querySelector('a')?.focus();
+        }
+      }
       function updateNav() {
         const currentY = window.scrollY;
         const delta = currentY - lastScrollY;
         if (siteNav) {
           siteNav.classList.toggle('is-scrolled', currentY > 24);
-          if (currentY <= 24 || delta < -8 || document.activeElement?.closest('.cajetin')) {
+          if (currentY <= 24 || delta < -8 || document.activeElement?.closest('.cajetin') || isMenuOpen()) {
             siteNav.classList.remove('is-hidden');
           } else if (delta > 8) {
             siteNav.classList.add('is-hidden');
+            setMenuOpen(false);
           }
         }
         lastScrollY = currentY;
@@ -380,6 +609,23 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
         if (!scrollFrame) scrollFrame = requestAnimationFrame(updateNav);
       }, { passive: true });
       siteNav?.addEventListener('focusin', () => siteNav.classList.remove('is-hidden'));
+
+      if (navToggle && menuPanel) {
+        navToggle.addEventListener('click', () => setMenuOpen(!isMenuOpen()));
+        menuPanel.addEventListener('click', (e) => {
+          if (e.target.closest('a')) setMenuOpen(false);
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && isMenuOpen()) {
+            setMenuOpen(false);
+            navToggle.focus();
+          }
+        });
+        document.addEventListener('click', (e) => {
+          if (!isMenuOpen()) return;
+          if (!e.target.closest('.menu-panel') && !e.target.closest('.nav-toggle')) setMenuOpen(false);
+        });
+      }
 
       const revealables = document.querySelectorAll('.reveal, .chain');
       const io = new IntersectionObserver(
@@ -397,3 +643,4 @@ const waUrl = `https://wa.me/573104063602?text=${encodeURIComponent('Hola, encon
     </script>
 </body>
 </html>
+

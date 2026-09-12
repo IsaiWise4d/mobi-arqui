@@ -1,0 +1,363 @@
+---
+import { cotizador, waLink } from '../data/sitio';
+const totalPasos = 6;
+---
+
+<section class="sec cotizador-section cotizador-section--mist" id="cotizador" aria-labelledby="cotizador-title">
+  <div class="wrap">
+    <div class="sec-head reveal" data-gsap="section-head">
+      <p class="section-index">08 / COTIZACIÓN RÁPIDA</p>
+      <h2 class="sec-title" id="cotizador-title">Arma tu solicitud<br /><span>en 30 segundos.</span></h2>
+      <p class="cotizador-intro">
+        Responde unos datos y te preparamos el mensaje listo para enviar por WhatsApp. Con esa información te damos una
+        respuesta concreta el mismo día.
+      </p>
+    </div>
+
+    <div class="cotizador-panel" data-wizard>
+      <div class="cotizador-form">
+        <div class="wz-progress" aria-hidden="true">
+          <div class="wz-track"><span data-wizard-bar></span></div>
+          <p class="wz-count"><span data-wizard-current>01</span> / {String(totalPasos).padStart(2, '0')}</p>
+        </div>
+
+        <form data-wizard-form novalidate>
+          <fieldset class="wz-step is-current" data-step="0" data-key="tipo" data-requerido="true" tabindex="-1">
+            <legend class="wz-legend">¿Qué tipo de proyecto tienes en mente?</legend>
+            <div class="wz-chips">
+              {
+                cotizador.tipos.map((t) => (
+                  <label class="wz-chip">
+                    <input type="radio" name="tipo" value={t} />
+                    <span>{t}</span>
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+
+          <fieldset class="wz-step" data-step="1" data-key="area" data-requerido="true" hidden tabindex="-1">
+            <legend class="wz-legend">¿De cuántos m² hablamos, aproximadamente?</legend>
+            <div class="wz-number">
+              <button type="button" data-wizard-step-down aria-label="Reducir área">−</button>
+              <input type="number" name="area" inputmode="numeric" min="5" step="1" placeholder="120" required />
+              <span class="wz-unit" aria-hidden="true">m²</span>
+              <button type="button" data-wizard-step-up aria-label="Aumentar área">+</button>
+            </div>
+          </fieldset>
+
+          <fieldset class="wz-step" data-step="2" data-key="zona" hidden tabindex="-1">
+            <legend class="wz-legend">¿En qué zona de Barranquilla?</legend>
+            <p class="wz-optional">Opcional — puedes continuar sin responder</p>
+            <div class="wz-chips">
+              {
+                cotizador.zonas.map((z) => (
+                  <label class="wz-chip">
+                    <input type="radio" name="zona" value={z} />
+                    <span>{z}</span>
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+
+          <fieldset class="wz-step" data-step="3" data-key="estado" data-requerido="true" hidden tabindex="-1">
+            <legend class="wz-legend">¿Cómo está tu proyecto hoy?</legend>
+            <div class="wz-chips">
+              {
+                cotizador.estados.map((e) => (
+                  <label class="wz-chip">
+                    <input type="radio" name="estado" value={e} />
+                    <span>{e}</span>
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+
+          <fieldset class="wz-step" data-step="4" data-key="cuando" data-requerido="true" hidden tabindex="-1">
+            <legend class="wz-legend">¿Cuándo quieres iniciar?</legend>
+            <div class="wz-chips">
+              {
+                cotizador.tiempos.map((t) => (
+                  <label class="wz-chip">
+                    <input type="radio" name="cuando" value={t} />
+                    <span>{t}</span>
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+
+          <fieldset class="wz-step" data-step="5" data-key="nombre" data-requerido="true" hidden tabindex="-1">
+            <legend class="wz-legend">¿Cómo te llamas?</legend>
+            <div class="wz-nombre">
+              <input type="text" name="nombre" autocomplete="name" placeholder="Tu nombre" required />
+            </div>
+          </fieldset>
+        </form>
+
+        <p class="wz-error" data-wizard-error role="alert" hidden></p>
+
+        <div class="wz-nav">
+          <button type="button" class="sello wz-back" data-wizard-back hidden>Atrás</button>
+          <button type="button" class="sello sello-big wz-next" data-wizard-next>Continuar</button>
+        </div>
+      </div>
+
+      <aside class="cotizador-preview" aria-label="Vista previa del mensaje para WhatsApp">
+        <p class="preview-head">Mensaje para WhatsApp · Vista previa</p>
+        <p class="preview-text" data-wizard-preview>Responde los pasos y aquí se arma tu mensaje.</p>
+        <div class="preview-actions">
+          <a class="sello sello-big wz-send" data-wizard-send href={waLink()} target="_blank" rel="noopener" aria-disabled="true">
+            Enviar por WhatsApp
+          </a>
+          <button type="button" class="wz-copy" data-wizard-copy>Copiar mensaje</button>
+        </div>
+        <p class="wz-trust">{cotizador.notaConfianza}</p>
+      </aside>
+    </div>
+
+    <noscript>
+      <div class="wz-nojs">
+        <p>El cotizador rápido necesita JavaScript. Mientras tanto, escríbenos directo por WhatsApp:</p>
+        <a class="sello sello-big" href={waLink()} target="_blank" rel="noopener">Cotiza por WhatsApp</a>
+      </div>
+    </noscript>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector('[data-wizard]');
+  if (root) {
+    const steps = Array.from(root.querySelectorAll<HTMLElement>('.wz-step'));
+    const bar = root.querySelector<HTMLElement>('[data-wizard-bar]');
+    const current = root.querySelector<HTMLElement>('[data-wizard-current]');
+    const backBtn = root.querySelector<HTMLButtonElement>('[data-wizard-back]');
+    const nextBtn = root.querySelector<HTMLButtonElement>('[data-wizard-next]');
+    const errorEl = root.querySelector<HTMLElement>('[data-wizard-error]');
+    const preview = root.querySelector<HTMLElement>('[data-wizard-preview]');
+    const send = root.querySelector<HTMLAnchorElement>('[data-wizard-send]');
+    const copyBtn = root.querySelector<HTMLButtonElement>('[data-wizard-copy]');
+    const form = root.querySelector<HTMLFormElement>('[data-wizard-form]');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const data: Record<string, string> = {};
+    let idx = 0;
+
+    const placeholders: Record<string, string> = {
+      tipo: '[tipo de proyecto]',
+      area: '[área] m²',
+      zona: '[zona]',
+      estado: '[estado actual]',
+      cuando: 'Quiero iniciar: [tiempo]',
+      nombre: 'Nombre: [nombre]',
+    };
+
+    const plantilla = (completo: boolean) => {
+      const partes = (['tipo', 'area', 'zona', 'estado', 'cuando', 'nombre'] as const).map((k) => {
+        const valor = data[k]?.trim();
+        if (valor) return k === 'cuando' ? `Quiero iniciar: ${valor}` : k === 'nombre' ? `Nombre: ${valor}` : k === 'area' ? `${valor} m²` : valor;
+        return completo ? '' : placeholders[k];
+      }).filter(Boolean);
+      return `Hola Mobi Arquitectura, les escribo desde su página web. Quisiera solicitar una cotización con estos datos: ${partes.join(' · ')}`;
+    };
+
+    const completo = () =>
+      Boolean(
+        data.tipo &&
+        Number(data.area) > 0 &&
+        data.estado &&
+        data.cuando &&
+        (data.nombre ?? '').trim().length >= 2
+      );
+
+    const updatePreview = () => {
+      if (!preview || !send) return;
+      const listo = completo();
+      const hayDatos = Object.values(data).some((v) => v && v.trim());
+      preview.textContent = !hayDatos ? 'Responde los pasos y aquí se arma tu mensaje.' : listo ? plantilla(true) : plantilla(false);
+      send.setAttribute('aria-disabled', String(!listo));
+      send.classList.toggle('is-ready', listo);
+      if (listo) send.href = `https://wa.me/573104063602?text=${encodeURIComponent(plantilla(true))}`;
+    };
+
+    const showError = (mensaje: string) => {
+      if (!errorEl) return;
+      errorEl.textContent = mensaje;
+      errorEl.hidden = false;
+      if (!reduced) {
+        errorEl.animate(
+          [{ opacity: 0, transform: 'translateY(-4px)' }, { opacity: 1, transform: 'translateY(0)' }],
+          { duration: 180, easing: 'ease-out' }
+        );
+      }
+    };
+
+    const hideError = () => {
+      if (errorEl) errorEl.hidden = true;
+    };
+
+    const validar = (i: number): string | null => {
+      const step = steps[i];
+      const key = step.dataset.key ?? '';
+      if (step.dataset.requerido !== 'true') return null;
+      if (key === 'area') {
+        const valor = Number(data.area);
+        if (!valor || valor <= 0) return 'Necesitamos el área aproximada en m² para continuar.';
+        return null;
+      }
+      if (key === 'nombre') {
+        if ((data.nombre ?? '').trim().length < 2) return 'Escríbenos tu nombre para dirigirte en la respuesta.';
+        return null;
+      }
+      if (!data[key]) return 'Elige una opción para continuar.';
+      return null;
+    };
+
+    const setBar = () => {
+      if (bar) bar.style.transform = `scaleX(${(idx + 1) / steps.length})`;
+      if (current) current.textContent = String(idx + 1).padStart(2, '0');
+    };
+
+    const updateNav = () => {
+      if (backBtn) backBtn.hidden = idx === 0;
+      if (nextBtn) nextBtn.hidden = idx === steps.length - 1;
+    };
+
+    const show = (i: number, dir = 1) => {
+      const prev = steps[idx];
+      const cur = steps[i];
+      idx = i;
+      prev.classList.remove('is-current');
+      prev.hidden = true;
+      cur.hidden = false;
+      cur.classList.add('is-current');
+      if (!reduced) {
+        cur.animate(
+          [
+            { opacity: 0, transform: `translateX(${24 * dir}px)` },
+            { opacity: 1, transform: 'translateX(0)' },
+          ],
+          { duration: 280, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
+        );
+      }
+      cur.focus({ preventScroll: true });
+      cur.scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
+      setBar();
+      updateNav();
+      hideError();
+    };
+
+    const avanzar = () => {
+      const error = validar(idx);
+      if (error) {
+        showError(error);
+        return;
+      }
+      if (idx < steps.length - 1) {
+        show(idx + 1, 1);
+      } else if (completo() && send) {
+        send.click();
+      }
+    };
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      avanzar();
+    });
+
+    nextBtn?.addEventListener('click', avanzar);
+    backBtn?.addEventListener('click', () => idx > 0 && show(idx - 1, -1));
+
+    steps.forEach((step, i) => {
+      step.addEventListener('change', (e) => {
+        const input = e.target as HTMLInputElement;
+        if (input.type === 'radio') {
+          data[step.dataset.key ?? ''] = input.value;
+          updatePreview();
+          hideError();
+          if (i < steps.length - 1) {
+            window.setTimeout(() => {
+              if (steps[idx] === step) avanzar();
+            }, 260);
+          }
+        }
+      });
+      const numberInput = step.querySelector<HTMLInputElement>('input[type="number"]');
+      if (numberInput) {
+        numberInput.addEventListener('input', () => {
+          data.area = numberInput.value;
+          updatePreview();
+          hideError();
+        });
+        const down = step.querySelector<HTMLButtonElement>('[data-wizard-step-down]');
+        const up = step.querySelector<HTMLButtonElement>('[data-wizard-step-up]');
+        const ajustar = (delta: number) => {
+          const actual = Number(numberInput.value) || 0;
+          const siguiente = Math.max(5, actual + delta);
+          numberInput.value = String(siguiente);
+          data.area = String(siguiente);
+          updatePreview();
+          hideError();
+        };
+        down?.addEventListener('click', () => ajustar(-10));
+        up?.addEventListener('click', () => ajustar(10));
+      }
+      const textInput = step.querySelector<HTMLInputElement>('input[type="text"]');
+      if (textInput) {
+        textInput.addEventListener('input', () => {
+          data.nombre = textInput.value;
+          updatePreview();
+          hideError();
+        });
+      }
+    });
+
+    send?.addEventListener('click', (e) => {
+      if (!completo()) {
+        e.preventDefault();
+        showError('Completa los pasos para armar el mensaje.');
+      }
+    });
+
+    copyBtn?.addEventListener('click', async () => {
+      const texto = preview?.textContent ?? '';
+      if (!texto) return;
+      try {
+        await navigator.clipboard.writeText(texto);
+        const original = copyBtn.textContent;
+        copyBtn.textContent = 'Copiado ✓';
+        copyBtn.disabled = true;
+        window.setTimeout(() => {
+          copyBtn.textContent = original;
+          copyBtn.disabled = false;
+        }, 1600);
+      } catch {
+        showError('No se pudo copiar. Selecciona el mensaje manualmente.');
+      }
+    });
+
+    const params = new URLSearchParams(location.search);
+    const codigo = params.get('cotiza');
+    if (codigo) {
+      const mapa: Record<string, string> = {
+        'A-01': 'Carpintería a medida',
+        'D-02': 'Diseño de mobiliario',
+        'C-03': 'Obra civil y acabados',
+        'O-04': 'Divisiones de baño en vidrio',
+      };
+      const tipo = mapa[codigo];
+      if (tipo) {
+        data.tipo = tipo;
+        const radio = root.querySelector<HTMLInputElement>(`input[name="tipo"][value="${CSS.escape(tipo)}"]`);
+        if (radio) radio.checked = true;
+        updatePreview();
+        show(1, 1);
+      }
+    }
+
+    setBar();
+    updateNav();
+    updatePreview();
+  }
+</script>

@@ -1,0 +1,56 @@
+---
+import { indicadores } from '../data/sitio';
+---
+
+<section class="indicadores indicadores--ink" aria-labelledby="indicadores-title">
+  <div class="wrap">
+    <p class="section-index" id="indicadores-title">03 / EN NÚMEROS</p>
+    <dl class="ind-grid">
+      {
+        indicadores.map((it) => (
+          <div class="ind-item">
+            <dt class="ind-label">{it.etiqueta}</dt>
+            <dd class="ind-valor" data-count={it.valor} data-prefix={it.prefijo ?? ''} data-suffix={it.sufijo ?? ''}>
+              {it.prefijo ?? ''}{it.valor}{it.sufijo ?? ''}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<script>
+  const items = document.querySelectorAll('[data-count]');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!reduced && items.length) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          io.unobserve(entry.target);
+          const el = entry.target as HTMLElement;
+          const target = Number(el.dataset.count);
+          const pre = el.dataset.prefix ?? '';
+          const suf = el.dataset.suffix ?? '';
+          const t0 = performance.now();
+          const dur = 1100;
+          const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+          const step = (now: number) => {
+            const p = Math.min(1, (now - t0) / dur);
+            el.textContent = `${pre}${Math.round(target * ease(p))}${suf}`;
+            if (p < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        }
+      },
+      { threshold: 0.5 }
+    );
+    items.forEach((el) => {
+      const node = el as HTMLElement;
+      node.textContent = `${node.dataset.prefix ?? ''}0${node.dataset.suffix ?? ''}`;
+      io.observe(el);
+    });
+  }
+</script>

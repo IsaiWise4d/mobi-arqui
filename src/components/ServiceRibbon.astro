@@ -1,16 +1,21 @@
+---
+import { servicios } from '../data/sitio';
+const items = servicios.map((s) => `${s.codigo} ${s.area}`);
+---
+
 <div class="service-ribbon" aria-label="Servicios de Mobi Arquitectura">
   <div class="service-ribbon-track">
-    <div class="service-ribbon-set">
-      <span>Diseño de espacios</span><i></i><span>Obra civil</span><i></i><span>Carpintería a medida</span><i></i><span>Acabados</span><i></i>
-    </div>
-    <div class="service-ribbon-set" aria-hidden="true">
-      <span>Diseño de espacios</span><i></i><span>Obra civil</span><i></i><span>Carpintería a medida</span><i></i><span>Acabados</span><i></i>
-    </div>
-    <div class="service-ribbon-set" aria-hidden="true">
-      <span>Diseño de espacios</span><i></i><span>Obra civil</span><i></i><span>Carpintería a medida</span><i></i><span>Acabados</span><i></i>
-    </div>
-    <div class="service-ribbon-set" aria-hidden="true">
-      <span>Diseño de espacios</span><i></i><span>Obra civil</span><i></i><span>Carpintería a medida</span><i></i><span>Acabados</span><i></i>
-    </div>
+    {
+      [0, 1, 2, 3].map((set) => (
+        <div class="service-ribbon-set" aria-hidden={set > 0 ? 'true' : undefined}>
+          {items.map((item) => (
+            <>
+              <span>{item}</span>
+              <i />
+            </>
+          ))}
+        </div>
+      ))
+    }
   </div>
 </div>

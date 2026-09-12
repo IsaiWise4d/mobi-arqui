@@ -1,0 +1,16 @@
+---
+import { nosotros } from '../data/sitio';
+---
+
+<section class="sec nosotros-section nosotros-section--night" aria-labelledby="nosotros-title">
+  <div class="wrap nosotros-in">
+    <p class="section-index reveal">07 / QUIÉNES SOMOS</p>
+    <p class="nosotros-statement reveal" id="nosotros-title">
+      {nosotros.statement} <em>{nosotros.enfasis}</em>
+    </p>
+    <div class="chain-dim nosotros-dim" aria-hidden="true">
+      <p class="dim-label">{nosotros.anotacion}</p>
+      <div class="dim-line"></div>
+    </div>
+  </div>
+</section>

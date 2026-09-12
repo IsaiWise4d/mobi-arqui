@@ -1,0 +1,49 @@
+---
+import { proyectoDestacado, marca } from '../data/sitio';
+const p = proyectoDestacado;
+const tieneFotos = p.fotos.length > 0;
+---
+
+<section class="sec proyectos-section proyectos-section--blueprint" id="proyectos" aria-labelledby="proyectos-title">
+  <div class="wrap">
+    <div class="sec-head reveal" data-gsap="section-head">
+      <p class="section-index">04 / PROYECTOS</p>
+      <h2 class="sec-title" id="proyectos-title">Obra real,<br /><span>en Barranquilla.</span></h2>
+      <p class="proyectos-intro">Diseño, obra civil y carpintería para hogares y también para constructoras aliadas.</p>
+    </div>
+
+    <article class="ficha reveal">
+      <div class="ficha-data">
+        <p class="row-code">{p.categoria.toUpperCase()} · FICHA 01</p>
+        <h3>{p.titulo}</h3>
+        <dl class="ficha-table">
+          <div><dt>Cliente</dt><dd>{p.cliente}</dd></div>
+          <div><dt>Categoría</dt><dd>{p.categoria}</dd></div>
+          <div><dt>Año</dt><dd>{p.anio}</dd></div>
+        </dl>
+        <p class="ficha-desc">{p.descripcion}</p>
+      </div>
+      <div class="ficha-media">
+        {
+          tieneFotos ? (
+            p.fotos.map((f) => <img src={f.src} alt={f.alt} loading="lazy" />)
+          ) : (
+            <div class="plot ficha-plot" data-gsap="plot">
+              <p class="plot-coord tl">0,0</p>
+              <p class="plot-coord tr">16,0</p>
+              <p class="plot-coord bl">0,9</p>
+              <p class="plot-coord br">16,9</p>
+              <div class="plot-crosshair" aria-hidden="true" />
+              <p class="stamp">Galería en levantamiento</p>
+            </div>
+          )
+        }
+      </div>
+    </article>
+
+    <p class="plot-note reveal">
+      Seguimos documentando más obras — mientras tanto, así trabajamos con las constructoras y hogares que confían en
+      Mobi. <a class="text-link" href={marca.instagram} target="_blank" rel="noopener">Ver {marca.instagramHandle} <span aria-hidden="true">↗</span></a>
+    </p>
+  </div>
+</section>
