@@ -31,6 +31,11 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-h) + 16px);
   interpolate-size: allow-keywords;
+  overscroll-behavior-y: none;
+}
+
+body {
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -1504,10 +1509,13 @@ html:not(.js) .hero-intro::before {
 }
 
 @media (max-width: 600px) {
-  /* Mobile hero stage uses a FIXED 90% of the viewport (svh, not dvh): the
-     URL toolbar on phones expands/collapses mid-scroll, and dvh/100% resize
-     the sticky stage every frame → the canvas re-buffers and the scrub jerks. */
-  .hero-stage { height: 90vh; height: 90svh; }
+  /* Mobile hero stage is a FIXED full viewport (100svh, NOT dvh): the URL
+     toolbar on phones expands/collapses mid-scroll, and dvh would resize the
+     sticky stage every frame → the canvas re-buffers and the scrub jerks.
+     svh is the stable "toolbar visible" height, so it fills the screen on
+     load (full-bleed via viewport-fit=cover) and never shifts while
+     scrolling. */
+  .hero-stage { height: 100svh; }
   .services-section { padding-top: clamp(54px, 8vh, 82px); }
   .services-section .sec-head { margin-bottom: 34px; }
   .services-section .sec-title { font-size: clamp(2rem, 9vw, 2.7rem); line-height: .98; }
