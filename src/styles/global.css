@@ -903,6 +903,9 @@ html:not(.js) .hero-intro::before {
 
   .hero-intro {
     width: calc(100% - 36px);
+    /* Center the copy inside the VISIBLE strip (svh), not the taller lvh
+       stage, so it stays centered while the toolbar is showing. */
+    top: calc(100svh / 2);
   }
   .hero-eyebrow {
     font-size: 9px;
@@ -956,7 +959,10 @@ html:not(.js) .hero-intro::before {
 
   .hero-hud {
     right: 18px;
-    bottom: 22px;
+    /* The stage is 100lvh tall (taller than the visible strip when the
+       toolbar is showing). Anchoring the HUD above the visible bottom keeps
+       it off the toolbar whether it is expanded or collapsed. */
+    bottom: calc(100lvh - 100svh + env(safe-area-inset-bottom) + 22px);
     font-size: 9px;
   }
 
@@ -1509,13 +1515,14 @@ html:not(.js) .hero-intro::before {
 }
 
 @media (max-width: 600px) {
-  /* Mobile hero stage is a FIXED full viewport (100svh, NOT dvh): the URL
-     toolbar on phones expands/collapses mid-scroll, and dvh would resize the
-     sticky stage every frame → the canvas re-buffers and the scrub jerks.
-     svh is the stable "toolbar visible" height, so it fills the screen on
-     load (full-bleed via viewport-fit=cover) and never shifts while
-     scrolling. */
-  .hero-stage { height: 100svh; }
+  /* Mobile hero stage is a FIXED full viewport (100lvh, NOT dvh): the URL
+     toolbar expands/collapses mid-scroll, and dvh would resize the sticky
+     stage every frame → the canvas re-buffers and the scrub jerks. lvh is
+     the stable "toolbar collapsed" height, so the canvas always reaches the
+     bottom edge in BOTH toolbar states and never re-flows while scrolling.
+     The overlays below are positioned inside the visible strip (svh) so the
+     copy never hides under the toolbar. */
+  .hero-stage { height: 100vh; height: 100lvh; }
   .services-section { padding-top: clamp(54px, 8vh, 82px); }
   .services-section .sec-head { margin-bottom: 34px; }
   .services-section .sec-title { font-size: clamp(2rem, 9vw, 2.7rem); line-height: .98; }
