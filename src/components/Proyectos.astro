@@ -1,7 +1,5 @@
 ---
-import { proyectoDestacado, marca } from '../data/sitio';
-const p = proyectoDestacado;
-const tieneFotos = p.fotos.length > 0;
+import { proyectos, marca } from '../data/sitio';
 ---
 
 <section class="sec proyectos-section proyectos-section--blueprint" id="proyectos" aria-labelledby="proyectos-title">
@@ -12,34 +10,58 @@ const tieneFotos = p.fotos.length > 0;
       <p class="proyectos-intro">Diseño, obra civil y carpintería para hogares y también para constructoras aliadas.</p>
     </div>
 
-    <article class="ficha reveal">
-      <div class="ficha-data">
-        <p class="row-code">{p.categoria.toUpperCase()} · FICHA 01</p>
-        <h3>{p.titulo}</h3>
-        <dl class="ficha-table">
-          <div><dt>Cliente</dt><dd>{p.cliente}</dd></div>
-          <div><dt>Categoría</dt><dd>{p.categoria}</dd></div>
-          <div><dt>Año</dt><dd>{p.anio}</dd></div>
-        </dl>
-        <p class="ficha-desc">{p.descripcion}</p>
+    <div class="embla ficha-carousel reveal" data-carousel data-carousel-fichas data-carousel-manual aria-roledescription="carrusel" aria-label="Proyectos de Mobi Arquitectura">
+      <div class="embla__viewport">
+        <div class="embla__container ficha-rail">
+          {
+            proyectos.map((p, i) => (
+              <article
+                class="ficha ficha-slide"
+                aria-roledescription="diapositiva"
+                aria-label={`${i + 1} de ${proyectos.length}`}
+              >
+                <div class="ficha-data">
+                  <p class="row-code">{p.categoria.toUpperCase()} · FICHA {String(i + 1).padStart(2, '0')}</p>
+                  <h3>{p.titulo}</h3>
+                  <dl class="ficha-table">
+                    <div><dt>Cliente</dt><dd>{p.cliente}</dd></div>
+                    <div><dt>Categoría</dt><dd>{p.categoria}</dd></div>
+                    <div><dt>Año</dt><dd>{p.anio}</dd></div>
+                  </dl>
+                  <p class="ficha-desc">{p.descripcion}</p>
+                </div>
+                <div class="ficha-media">
+                  {
+                    p.fotos.length > 0 ? (
+                      p.fotos.map((f) => <img src={f.src} alt={f.alt} loading="lazy" />)
+                    ) : (
+                      <div class="plot ficha-plot" data-gsap="plot">
+                        <p class="plot-coord tl">0,0</p>
+                        <p class="plot-coord tr">16,0</p>
+                        <p class="plot-coord bl">0,9</p>
+                        <p class="plot-coord br">16,9</p>
+                        <div class="plot-crosshair" aria-hidden="true" />
+                        <p class="stamp">Galería en levantamiento</p>
+                      </div>
+                    )
+                  }
+                </div>
+              </article>
+            ))
+          }
+        </div>
       </div>
-      <div class="ficha-media">
-        {
-          tieneFotos ? (
-            p.fotos.map((f) => <img src={f.src} alt={f.alt} loading="lazy" />)
-          ) : (
-            <div class="plot ficha-plot" data-gsap="plot">
-              <p class="plot-coord tl">0,0</p>
-              <p class="plot-coord tr">16,0</p>
-              <p class="plot-coord bl">0,9</p>
-              <p class="plot-coord br">16,9</p>
-              <div class="plot-crosshair" aria-hidden="true" />
-              <p class="stamp">Galería en levantamiento</p>
-            </div>
-          )
-        }
+      <div class="carousel-controls ficha-controls">
+        <button class="carousel-button" type="button" data-carousel-prev aria-label="Proyecto anterior">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7M8 12h10" /></svg>
+        </button>
+        <div class="carousel-progress" aria-hidden="true"><span></span></div>
+        <p class="carousel-count"><span data-carousel-current>01</span> / {String(proyectos.length).padStart(2, '0')}</p>
+        <button class="carousel-button" type="button" data-carousel-next aria-label="Siguiente proyecto">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5l7 7-7 7M16 12H6" /></svg>
+        </button>
       </div>
-    </article>
+    </div>
 
     <p class="plot-note reveal">
       Seguimos documentando más obras — mientras tanto, así trabajamos con las constructoras y hogares que confían en

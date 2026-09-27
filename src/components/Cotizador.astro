@@ -15,6 +15,10 @@ const totalPasos = 6;
     </div>
 
     <div class="cotizador-panel" data-wizard>
+      <div class="wz-mini" data-wizard-mini>
+        <p class="wz-mini-label">Tu solicitud · <span data-wizard-done-mini>0/5</span></p>
+        <button type="button" class="wz-mini-view" data-wizard-view>Ver resumen ↓</button>
+      </div>
       <div class="cotizador-form">
         <div class="wz-progress" aria-hidden="true">
           <div class="wz-track"><span data-wizard-bar></span></div>
@@ -105,15 +109,27 @@ const totalPasos = 6;
         </div>
       </div>
 
-      <aside class="cotizador-preview" aria-label="Vista previa del mensaje para WhatsApp">
-        <p class="preview-head">Mensaje para WhatsApp · Vista previa</p>
-        <p class="preview-text" data-wizard-preview>Responde los pasos y aquí se arma tu mensaje.</p>
+      <aside class="cotizador-preview" data-wizard-preview-box tabindex="-1" aria-label="Resumen de tu solicitud">
+        <div class="chat-head">
+          <span class="chat-dot" aria-hidden="true"></span>
+          <p class="preview-head">Tu solicitud</p>
+          <p class="chat-count"><span data-wizard-done role="status">0 de 5 datos</span></p>
+        </div>
+        <ul class="chat-dots" aria-hidden="true">
+          <li data-dot="tipo"><i></i>Proyecto</li>
+          <li data-dot="area"><i></i>Área</li>
+          <li data-dot="zona"><i></i>Zona</li>
+          <li data-dot="estado"><i></i>Estado</li>
+          <li data-dot="cuando"><i></i>Inicio</li>
+          <li data-dot="nombre"><i></i>Nombre</li>
+        </ul>
         <div class="preview-actions">
           <a class="sello sello-big wz-send" data-wizard-send href={waLink()} target="_blank" rel="noopener" aria-disabled="true">
             Enviar por WhatsApp
           </a>
           <button type="button" class="wz-copy" data-wizard-copy>Copiar mensaje</button>
         </div>
+        <p class="wz-remaining" data-wizard-remaining>Te faltan 5 datos</p>
         <p class="wz-trust">{cotizador.notaConfianza}</p>
       </aside>
     </div>
@@ -140,8 +156,18 @@ const totalPasos = 6;
     const send = root.querySelector<HTMLAnchorElement>('[data-wizard-send]');
     const copyBtn = root.querySelector<HTMLButtonElement>('[data-wizard-copy]');
     const form = root.querySelector<HTMLFormElement>('[data-wizard-form]');
+    const dots = Array.from(root.querySelectorAll<HTMLElement>('[data-dot]'));
+    const doneEl = root.querySelector<HTMLElement>('[data-wizard-done]');
+    const doneMini = root.querySelector<HTMLElement>('[data-wizard-done-mini]');
+    const remainingEl = root.querySelector<HTMLElement>('[data-wizard-remaining]');
+    const ticksEl = root.querySelector<HTMLElement>('[data-wizard-ticks]');
+    const metaEl = root.querySelector<HTMLElement>('[data-wizard-meta]');
+    const previewBox = root.querySelector<HTMLElement>('[data-wizard-preview-box]');
+    const viewBtn = root.querySelector<HTMLButtonElement>('[data-wizard-view]');
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const data: Record<string, string> = {};
+    const REQ = ['tipo', 'area', 'estado', 'cuando', 'nombre'];
+    const prevDone = new Set<string>();
     let idx = 0;
 
     const placeholders: Record<string, string> = {
@@ -171,14 +197,44 @@ const totalPasos = 6;
         (data.nombre ?? '').trim().length >= 2
       );
 
+    const esValido = (k: string): boolean => {
+      if (k === 'area') return Number(data.area) > 0;
+      if (k === 'nombre') return (data.nombre ?? '').trim().length >= 2;
+      return Boolean(data[k]);
+    };
+
     const updatePreview = () => {
-      if (!preview || !send) return;
+      if (!send) return;
       const listo = completo();
       const hayDatos = Object.values(data).some((v) => v && v.trim());
-      preview.textContent = !hayDatos ? 'Responde los pasos y aquí se arma tu mensaje.' : listo ? plantilla(true) : plantilla(false);
+      if (preview) preview.textContent = !hayDatos ? 'Responde los pasos y aquí se arma tu mensaje.' : listo ? plantilla(true) : plantilla(false);
       send.setAttribute('aria-disabled', String(!listo));
       send.classList.toggle('is-ready', listo);
       if (listo) send.href = `https://wa.me/573104063602?text=${encodeURIComponent(plantilla(true))}`;
+      const hechos = REQ.filter(esValido);
+      dots.forEach((d) => {
+        const k = d.dataset.dot ?? '';
+        const done = hechos.includes(k);
+        d.classList.toggle('is-done', done);
+        if (done && !prevDone.has(k) && !reduced) {
+          d.querySelector('i')?.animate(
+            [{ transform: 'scale(0.4)' }, { transform: 'scale(1.25)' }, { transform: 'scale(1)' }],
+            { duration: 320, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)' }
+          );
+        }
+      });
+      prevDone.clear();
+      hechos.forEach((k) => prevDone.add(k));
+      const n = hechos.length;
+      if (doneEl) doneEl.textContent = `${n} de 5 datos`;
+      if (doneMini) doneMini.textContent = `${n}/5`;
+      if (remainingEl) {
+        const faltan = 5 - n;
+        remainingEl.textContent = listo ? 'Listo para enviar' : faltan === 1 ? 'Te falta 1 dato' : `Te faltan ${faltan} datos`;
+        remainingEl.classList.toggle('is-ready', listo);
+      }
+      if (ticksEl) ticksEl.textContent = listo ? '✓✓' : '✓';
+      if (metaEl) metaEl.textContent = listo ? new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' }) : 'Se actualiza mientras respondes';
     };
 
     const showError = (mensaje: string) => {
@@ -320,8 +376,20 @@ const totalPasos = 6;
       }
     });
 
+    viewBtn?.addEventListener('click', () => {
+      if (!previewBox) return;
+      previewBox.scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
+      previewBox.focus({ preventScroll: true });
+    });
+
     copyBtn?.addEventListener('click', async () => {
-      const texto = preview?.textContent ?? '';
+      const listo = completo();
+      const hayDatos = Object.values(data).some((v) => v && v.trim());
+      if (!hayDatos) {
+        showError('Responde al menos un paso para copiar el mensaje.');
+        return;
+      }
+      const texto = listo ? plantilla(true) : plantilla(false);
       if (!texto) return;
       try {
         await navigator.clipboard.writeText(texto);

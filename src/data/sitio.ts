@@ -70,15 +70,28 @@ export const indicadores = [
   { valor: 98, sufijo: '%', etiqueta: 'Satisfacción de clientes' },
 ];
 
-export const proyectoDestacado = {
-  titulo: 'Acabados apartamento modelo',
-  cliente: 'Constructora Bolívar',
-  categoria: 'Obra civil y acabados',
-  anio: '2025', // 🔶 confirmar año/periodo con el cliente
-  descripcion:
-    'Ejecutamos los acabados del apartamento modelo para uno de los proyectos de Constructora Bolívar en Barranquilla, cuidando cada detalle de cara al público que lo visita.',
-  fotos: [] as { src: string; alt: string }[], // 🔶 pendiente: fotos reales de obra
-};
+export const proyectos = [
+  {
+    titulo: 'Acabados apartamento modelo',
+    cliente: 'Constructora Bolívar',
+    categoria: 'Obra civil y acabados',
+    anio: '2025', // 🔶 confirmar año/periodo con el cliente
+    descripcion:
+      'Ejecutamos los acabados del apartamento modelo para uno de los proyectos de Constructora Bolívar en Barranquilla, cuidando cada detalle de cara al público que lo visita.',
+    fotos: [] as { src: string; alt: string }[], // 🔶 pendiente: fotos reales de obra
+  },
+  {
+    titulo: 'Cocina integral en Alto Prado — PRUEBA',
+    cliente: 'Familia R. — PRUEBA',
+    categoria: 'Carpintería arquitectónica',
+    anio: '2024', // 🔶 texto de prueba para verificar el carrusel
+    descripcion:
+      'TEXTO DE PRUEBA: si lees esto y el contador marca 02 / 02, el carrusel está funcionando. Desliza o usa las flechas para volver a la Ficha 01 de Constructora Bolívar.',
+    fotos: [] as { src: string; alt: string }[],
+  },
+];
+
+export const proyectoDestacado = proyectos[0];
 
 export const faq = [
   {

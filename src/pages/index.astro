@@ -177,57 +177,112 @@ const ogImage = '/frames/ezgif-frame-300.jpg';
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       function setupCarousel() {
-        const root = document.querySelector('[data-carousel]');
-        if (!root) return;
-        const viewport = root.querySelector('.embla__viewport');
-        const container = root.querySelector('.embla__container');
-        const previous = root.querySelector('[data-carousel-prev]');
-        const next = root.querySelector('[data-carousel-next]');
-        const current = root.querySelector('[data-carousel-current]');
-        const progress = root.querySelector('.carousel-progress span');
-        const slides = root.querySelectorAll('.service-slide');
+        const roots = document.querySelectorAll('[data-carousel]');
+        if (!roots.length) return;
         const mql = window.matchMedia('(max-width: 760px)');
-        let embla: ReturnType<typeof EmblaCarousel> | null = null;
 
-        const update = () => {
-          if (!embla) return;
-          const index = embla.selectedScrollSnap();
-          if (current) current.textContent = String(index + 1).padStart(2, '0');
-          if (progress) progress.style.transform = `scaleX(${(index + 1) / slides.length})`;
-          slides.forEach((slide, slideIndex) => {
-            const isCurrent = slideIndex === index;
-            slide.setAttribute('aria-hidden', String(!isCurrent));
-            slide.inert = !isCurrent;
-          });
-          if (!reducedMotion) {
-            gsap.fromTo(slides[index].querySelectorAll('.service-copy > *'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .52, stagger: .06, ease: 'power2.out', overwrite: true });
-          }
+        const setupOne = (root) => {
+          try {
+            const viewport = root.querySelector('.embla__viewport');
+            const container = root.querySelector('.embla__container');
+            const previous = root.querySelector('[data-carousel-prev]');
+            const next = root.querySelector('[data-carousel-next]');
+            const current = root.querySelector('[data-carousel-current]');
+            const progress = root.querySelector('.carousel-progress span');
+            const slides = root.querySelectorAll('.service-slide, .ficha-slide');
+            if (!viewport || !slides.length) return;
+            const always = root.hasAttribute('data-carousel-fichas');
+            const manual = root.hasAttribute('data-carousel-manual');
+            const total = slides.length;
+            let index = 0;
+            let embla = null;
+
+            const paint = (animate) => {
+              if (current) current.textContent = String(index + 1).padStart(2, '0');
+              if (progress) {
+                progress.style.width = `${100 / total}%`;
+                progress.style.transform = `scaleX(${index + 1})`;
+              }
+              slides.forEach((slide, slideIndex) => {
+                slide.setAttribute('aria-hidden', String(slideIndex !== index));
+                try { slide.inert = slideIndex !== index; } catch (e) {}
+              });
+              if (animate && !reducedMotion && slides[index]) {
+                const copy = slides[index].querySelectorAll('.service-copy > *, .ficha-data > *');
+                if (copy && copy.length) gsap.fromTo(copy, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .52, stagger: .06, ease: 'power2.out', overwrite: true });
+              }
+            };
+
+            // Las flechas funcionan aunque Embla falle: usan scroll nativo como respaldo.
+            // Los carruseles manuales (fichas) usan SIEMPRE scroll nativo con
+            // scroll-snap: posicionamiento exacto, sin desfases de transform.
+            const goTo = (i, animate) => {
+              index = ((i % total) + total) % total;
+              if (embla) {
+                try { embla.scrollTo(index); } catch (e) {}
+                paint(false);
+              } else {
+                try { viewport.scrollTo({ left: index * viewport.clientWidth, behavior: reducedMotion ? 'auto' : 'smooth' }); } catch (e) {}
+                paint(animate);
+              }
+            };
+
+            const init = () => {
+              if (embla) return;
+              try {
+                const plugins = [];
+                if (!reducedMotion && !manual) {
+                  try { plugins.push(Autoplay({ delay: 4600, stopOnInteraction: false, stopOnMouseEnter: true })); } catch (e) {}
+                }
+                embla = EmblaCarousel(viewport, { loop: true, align: 'start', duration: 35 }, plugins);
+                embla.on('select', () => {
+                  try { index = embla.selectedScrollSnap(); } catch (e) {}
+                  paint(true);
+                });
+              } catch (e) { embla = null; }
+              paint(false);
+            };
+
+            const destroy = () => {
+              if (embla) { try { embla.destroy(); } catch (e) {} embla = null; }
+              if (container) container.style.transform = '';
+              index = 0;
+              slides.forEach((slide) => {
+                slide.removeAttribute('aria-hidden');
+                try { slide.inert = false; } catch (e) {}
+              });
+            };
+
+            if (previous) previous.addEventListener('click', () => goTo(index - 1, true));
+            if (next) next.addEventListener('click', () => goTo(index + 1, true));
+            window.addEventListener('load', () => {
+              if (embla) { try { embla.reInit(); paint(false); } catch (e) {} }
+            });
+
+            if (manual) {
+              let raf = 0;
+              const syncFromScroll = () => {
+                if (raf) return;
+                raf = requestAnimationFrame(() => {
+                  raf = 0;
+                  const w = viewport.clientWidth || 1;
+                  index = Math.min(total - 1, Math.max(0, Math.round(viewport.scrollLeft / w)));
+                  paint(false);
+                });
+              };
+              try { viewport.addEventListener('scroll', syncFromScroll, { passive: true }); } catch (e) {}
+              paint(false);
+            } else if (always) {
+              init();
+            } else {
+              const sync = (e) => { if (e.matches) init(); else destroy(); };
+              try { mql.addEventListener('change', sync); } catch (e) {}
+              if (mql.matches) init();
+            }
+          } catch (e) {}
         };
 
-        const init = () => {
-          if (embla || !mql.matches || !viewport) return;
-          const autoplay = reducedMotion ? null : Autoplay({ delay: 4600, stopOnInteraction: false, stopOnMouseEnter: true });
-          embla = EmblaCarousel(viewport, { loop: true, align: 'start', duration: 35 }, autoplay ? [autoplay] : []);
-          embla.on('select', update);
-          embla.on('init', update);
-          update();
-        };
-
-        const destroy = () => {
-          if (!embla) return;
-          embla.destroy();
-          embla = null;
-          if (container) container.style.transform = '';
-          slides.forEach((slide) => {
-            slide.removeAttribute('aria-hidden');
-            slide.inert = false;
-          });
-        };
-
-        previous?.addEventListener('click', () => embla?.scrollPrev());
-        next?.addEventListener('click', () => embla?.scrollNext());
-        mql.addEventListener('change', (e) => (e.matches ? init() : destroy()));
-        init();
+        roots.forEach(setupOne);
       }
 
       function setupMotion() {
@@ -352,6 +407,13 @@ const ogImage = '/frames/ezgif-frame-300.jpg';
       // first real canvas frame paints — no black flash on first paint.
       if (poster && !poster.src) poster.src = frameSrc(0);
 
+       function previousLoadedFrame(n) {
+         for (let i = clampIndex(n); i >= 0; i--) {
+           if (frames[i]) return i;
+         }
+         return -1;
+       }
+
        function closestLoadedFrame(n) {
          if (frames[n]) return n;
          for (let distance = 1; distance < COUNT; distance++) {
@@ -364,7 +426,8 @@ const ogImage = '/frames/ezgif-frame-300.jpg';
        }
 
        function draw(n) {
-         const i = closestLoadedFrame(clampIndex(n));
+         const wanted = clampIndex(n);
+         const i = mobileViewport ? closestLoadedFrame(wanted) : previousLoadedFrame(wanted);
          if (i < 0 || i === drawn) return;
         drawn = i;
         const w = canvas.width;
@@ -400,10 +463,9 @@ const ogImage = '/frames/ezgif-frame-300.jpg';
         draw(target);
       }
 
-      // Image-sequence loader: frames are fetched in a moving window around
-      // the scroll target, so the browser only pays for what the user watches;
-      // stale in-flight requests far from the target are cancelled while
-      // fast scrolling.
+      // Mobile keeps a moving window and cancels loads far from the playhead.
+      // Desktop preloads the whole JPG sequence (stride of 5 first, then the
+      // rest) and never aborts — that is what made 44dd339 feel continuous.
       function sortPending() {
         pending.sort((a, b) => Math.abs(a - target) - Math.abs(b - target));
       }
@@ -419,19 +481,21 @@ const ogImage = '/frames/ezgif-frame-300.jpg';
           schedulePump(240);
           return;
         }
-        for (const [index, im] of inflight) {
-          if (Math.abs(index - target) > HERO_SEQUENCE.staleDistance && pending.length > 0) {
-            im.onload = null;
-            im.onerror = null;
-            try {
-              im.src = '';
-            } catch {
-              // Aborting a load this way is best-effort.
+        if (mobileViewport) {
+          for (const [index, im] of inflight) {
+            if (Math.abs(index - target) > HERO_SEQUENCE.staleDistance && pending.length > 0) {
+              im.onload = null;
+              im.onerror = null;
+              try {
+                im.src = '';
+              } catch {
+                // Aborting a load this way is best-effort.
+              }
+              inflight.delete(index);
             }
-            inflight.delete(index);
           }
+          sortPending();
         }
-        sortPending();
         const end = Math.min(HERO_SEQUENCE.batchSize, pending.length);
         for (let k = 0; k < end; k++) {
           const n = pending.shift();
@@ -441,6 +505,16 @@ const ogImage = '/frames/ezgif-frame-300.jpg';
           inflight.set(n, im);
           im.onload = async () => {
             inflight.delete(n);
+            if (!mobileViewport) {
+              // Ready on load, same as the fluid desktop sequence. decode()
+              // runs in the background and must not delay the first paint.
+              frames[n] = im;
+              loaded += 1;
+              im.decode?.().catch(() => {});
+              draw(Math.round(displayTarget));
+              schedulePump(0);
+              return;
+            }
             try {
               await im.decode();
             } catch {
@@ -478,6 +552,11 @@ const ogImage = '/frames/ezgif-frame-300.jpg';
          if (pending.length > 0) schedulePump(0);
        }
 
+       function queueDesktop() {
+         for (let n = 0; n < COUNT; n += 5) pending.push(n);
+         for (let n = 0; n < COUNT; n++) if (n % 5 !== 0) pending.push(n);
+       }
+
       // Overlay layers follow the same normalized progress (copyStops), so the
       // same scroll position always reproduces the same state — forward or back.
       function applyLayers(p) {
@@ -500,8 +579,25 @@ const ogImage = '/frames/ezgif-frame-300.jpg';
         }
       }
 
-      // Optional smoothing runs only while the canvas settles toward the
-      // scroll target — no always-on rAF loop.
+      // Progress uses the sticky stage height, never window.innerHeight.
+      // On mobile the URL toolbar collapses mid-scroll; innerHeight/dvh would
+      // remap frames even though the finger moved the same amount.
+      const liveProgress = () => {
+        const total = hero.offsetHeight - stage.offsetHeight;
+        if (total <= 0) return 0;
+        return Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / total));
+      };
+
+      function easeToward(p) {
+        target = clampIndex(Math.round(p * (COUNT - 1)));
+        displayTarget += (target - displayTarget) * SMOOTHING;
+        if (Math.abs(target - displayTarget) < 0.02) displayTarget = target;
+        draw(Math.round(displayTarget));
+      }
+
+      // Mobile: ease only while settling toward the ScrollTrigger target.
+      // An always-on rAF was part of the jank, so this loop must not resample
+      // scroll on its own.
       function easeStep() {
         easeId = 0;
         displayTarget += (target - displayTarget) * SMOOTHING;
@@ -521,23 +617,45 @@ const ogImage = '/frames/ezgif-frame-300.jpg';
       function setProgress(p) {
         const next = clampIndex(Math.round(p * (COUNT - 1)));
         applyLayers(p);
-         if (next !== target) {
-           target = next;
-           queueWindow();
-           requestEase();
-         }
+        if (next !== target) {
+          target = next;
+          queueWindow();
+          requestEase();
+        }
+      }
+
+      // Desktop: read scroll every animation frame and ease at 0.18, same as
+      // 44dd339. Overlays follow the raw progress so a position always
+      // reproduces the same copy state, forward or back.
+      function desktopTick() {
+        if (reduced || !heroInView || document.hidden) {
+          easeId = 0;
+          return;
+        }
+        const p = liveProgress();
+        easeToward(p);
+        applyLayers(p);
+        easeId = requestAnimationFrame(desktopTick);
+      }
+
+      function startDesktopTick() {
+        if (reduced || easeId !== 0 || !heroInView || document.hidden) return;
+        easeId = requestAnimationFrame(desktopTick);
       }
 
       new ResizeObserver(sizeCanvas).observe(stage);
       sizeCanvas();
       new IntersectionObserver((entries) => {
         heroInView = entries[0].isIntersecting;
-        if (heroInView) requestEase();
+        if (!heroInView) return;
+        if (mobileViewport) requestEase();
+        else startDesktopTick();
       }).observe(hero);
       document.addEventListener('visibilitychange', () => {
         if (!document.hidden) {
           if (pending.length > 0 || inflight.size > 0) schedulePump(0);
-          requestEase();
+          if (mobileViewport) requestEase();
+          else startDesktopTick();
         }
       });
 
@@ -545,21 +663,9 @@ const ogImage = '/frames/ezgif-frame-300.jpg';
         document.documentElement.classList.add('static-hero');
         pending.push(COUNT - 1);
         schedulePump(0);
-      } else {
+      } else if (mobileViewport) {
         queueWindow();
         schedulePump(0);
-        // Native scroll position is the single source of truth — same section
-        // math as before, now owned by ScrollTrigger with refresh on settle.
-        // Progress is measured from live geometry on every update, but the
-        // total range is measured against the STAGE's own height (sticky and
-        // stable) rather than window.innerHeight: on mobile the URL toolbar
-        // collapses mid-scroll and dvh/innerHeight shift, which would make the
-        // frame mapping jump even though the finger moves the same amount.
-        const liveProgress = () => {
-          const total = hero.offsetHeight - stage.offsetHeight;
-          if (total <= 0) return 0;
-          return Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / total));
-        };
         heroST = ScrollTrigger.create({
           trigger: hero,
           start: 'top top',
@@ -572,11 +678,17 @@ const ogImage = '/frames/ezgif-frame-300.jpg';
         if (document.fonts?.ready) {
           document.fonts.ready.then(() => ScrollTrigger.refresh()).catch(() => {});
         }
+      } else {
+        queueDesktop();
+        schedulePump(0);
+        startDesktopTick();
       }
 
       // Static page: release the ScrollTrigger and timers when leaving.
-      window.addEventListener('pagehide', () => {        heroST?.kill();
+      window.addEventListener('pagehide', () => {
+        heroST?.kill();
         if (easeId) cancelAnimationFrame(easeId);
+        easeId = 0;
         if (pumpTimer) {
           clearTimeout(pumpTimer);
           pumpTimer = 0;
