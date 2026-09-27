@@ -33,7 +33,28 @@ import { proyectos, marca } from '../data/sitio';
                 <div class="ficha-media">
                   {
                     p.fotos.length > 0 ? (
-                      p.fotos.map((f) => <img src={f.src} alt={f.alt} loading="lazy" />)
+                      <div class="ficha-gallery" data-gallery>
+                        <div class="ficha-main">
+                          <img src={p.fotos[0].src} alt={p.fotos[0].alt} loading="lazy" data-gallery-main />
+                          <p class="ficha-count">
+                            <span data-gallery-index>01</span> / {String(p.fotos.length).padStart(2, '0')}
+                          </p>
+                        </div>
+                        <div class="ficha-thumbs" role="tablist" aria-label={`Fotos de ${p.titulo}`}>
+                          {p.fotos.map((f, j) => (
+                            <button
+                              type="button"
+                              class={`ficha-thumb${j === 0 ? ' is-active' : ''}`}
+                              data-gallery-thumb={j}
+                              data-src={f.src}
+                              data-alt={f.alt}
+                              aria-label={`Ver foto ${j + 1}: ${f.alt}`}
+                            >
+                              <img src={f.src} alt="" aria-hidden="true" loading="lazy" />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                     ) : (
                       <div class="plot ficha-plot" data-gsap="plot">
                         <p class="plot-coord tl">0,0</p>
@@ -69,3 +90,30 @@ import { proyectos, marca } from '../data/sitio';
     </p>
   </div>
 </section>
+
+<script>
+  document.querySelectorAll('[data-gallery]').forEach((gallery) => {
+    const main = gallery.querySelector('[data-gallery-main]');
+    const indexLabel = gallery.querySelector('[data-gallery-index]');
+    const thumbs = [...gallery.querySelectorAll('[data-gallery-thumb]')];
+    if (!main || !thumbs.length) return;
+    thumbs.forEach((thumb) => {
+      thumb.addEventListener('click', () => {
+        const src = thumb.getAttribute('data-src');
+        const alt = thumb.getAttribute('data-alt') || main.getAttribute('alt') || '';
+        if (!src || main.getAttribute('src') === src) return;
+        main.style.opacity = '0';
+        const swap = () => {
+          main.setAttribute('src', src);
+          main.setAttribute('alt', alt);
+          main.style.opacity = '1';
+        };
+        setTimeout(swap, 140);
+        thumbs.forEach((t) => t.classList.remove('is-active'));
+        thumb.classList.add('is-active');
+        const i = Number(thumb.getAttribute('data-gallery-thumb')) + 1;
+        if (indexLabel) indexLabel.textContent = String(i).padStart(2, '0');
+      });
+    });
+  });
+</script>

@@ -78,16 +78,46 @@ export const proyectos = [
     anio: '2025', // 🔶 confirmar año/periodo con el cliente
     descripcion:
       'Ejecutamos los acabados del apartamento modelo para uno de los proyectos de Constructora Bolívar en Barranquilla, cuidando cada detalle de cara al público que lo visita.',
-    fotos: [] as { src: string; alt: string }[], // 🔶 pendiente: fotos reales de obra
+    fotos: [
+      {
+        src: '/proyecto1/SaveClip.App_611702271_18090193967311608_8180274784776699631_n.jpg',
+        alt: 'Sala comedor del apartamento modelo con cocina abierta al fondo',
+      },
+      {
+        src: '/proyecto1/SaveClip.App_613030350_18090193976311608_3936159774360201608_n.jpg',
+        alt: 'Comedor y barra de cocina con carpintería en madera y sillas doradas',
+      },
+      {
+        src: '/proyecto1/SaveClip.App_612473026_18090193985311608_8907621496528068029_n.jpg',
+        alt: 'Detalle de barra de cocina con estantería en madera y taburetes altos',
+      },
+      {
+        src: '/proyecto1/SaveClip.App_616277671_18090193958311608_8762842745461618806_n.jpg',
+        alt: 'Sala con sofá, mesa de centro en madera y estudio con repisas iluminadas',
+      },
+    ] as { src: string; alt: string }[],
   },
   {
-    titulo: 'Cocina integral en Alto Prado — PRUEBA',
-    cliente: 'Familia R. — PRUEBA',
+    titulo: 'Alcoba con tocador y mueble de TV',
+    cliente: 'Residencial — Barranquilla',
     categoria: 'Carpintería arquitectónica',
-    anio: '2024', // 🔶 texto de prueba para verificar el carrusel
+    anio: '2025',
     descripcion:
-      'TEXTO DE PRUEBA: si lees esto y el contador marca 02 / 02, el carrusel está funcionando. Desliza o usa las flechas para volver a la Ficha 01 de Constructora Bolívar.',
-    fotos: [] as { src: string; alt: string }[],
+      'Carpintería a medida para alcoba: tocador flotante con espejo retroiluminado y mueble de TV con nicho iluminado, en acabado mate con luz cálida integrada.',
+    fotos: [
+      {
+        src: '/proyecto2/SaveClip.App_733726619_18109273118311608_854908423906778636_n.jpg',
+        alt: 'Tocador flotante con espejo circular retroiluminado y poltrona',
+      },
+      {
+        src: '/proyecto2/SaveClip.App_734872156_18109273115311608_7809662825624821597_n.jpg',
+        alt: 'Tocador y puertas de alcoba con espejo de luz cálida',
+      },
+      {
+        src: '/proyecto2/SaveClip.App_735178750_18109273127311608_2195169031589428926_n.jpg',
+        alt: 'Mueble de TV flotante con nicho vertical iluminado',
+      },
+    ] as { src: string; alt: string }[],
   },
 ];
 

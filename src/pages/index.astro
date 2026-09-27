@@ -319,9 +319,9 @@ const ogImage = '/frames/ezgif-frame-300.jpg';
           scrollTrigger: { trigger: '.process-timeline', start: 'top 72%', end: 'bottom 78%', scrub: true },
         });
 
-        gsap.fromTo('.phone', { rotateY: -14, rotateZ: 0, y: 36, opacity: 0 }, {
-          rotateY: 0, rotateZ: 0, y: 0, opacity: 1, duration: 1.05, ease: 'power3.out',
-          scrollTrigger: { trigger: '.phone-wrap', start: 'top 78%', toggleActions: 'play none none none' },
+        gsap.fromTo('.ig-post', { y: 36, opacity: 0 }, {
+          y: 0, opacity: 1, duration: 1.05, ease: 'power3.out',
+          scrollTrigger: { trigger: '.ig-wrap', start: 'top 78%', toggleActions: 'play none none none' },
         });
 
         gsap.fromTo('.contact-title', { clipPath: 'inset(0 0 100% 0)', y: 30 }, {
