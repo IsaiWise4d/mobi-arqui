@@ -19,6 +19,8 @@
   --f-body: 'Archivo', system-ui, sans-serif;
   --f-mono: 'Fragment Mono', ui-monospace, 'Cascadia Mono', monospace;
   --header-h: 82px;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-draw: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 *,
@@ -164,6 +166,15 @@ a {
   box-shadow: 0 8px 24px rgba(27, 31, 30, 0.1);
 }
 
+/* Over the hero canvas the blur would be re-rasterized on every scrubbed
+   frame; at this opacity a solid paper reads the same. */
+html.on-hero .cajetin,
+html.on-hero .cajetin.is-scrolled {
+  background: var(--papel);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
 .cajetin.is-scrolled nav a {
   color: var(--tinta);
 }
@@ -251,6 +262,20 @@ a {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid color-mix(in srgb, var(--tinta) 18%, transparent);
+  transition: opacity 0.22s ease, translate 0.28s var(--ease-out), display 0.28s allow-discrete;
+}
+
+.menu-panel[hidden] {
+  display: none;
+  opacity: 0;
+  translate: 0 -8px;
+}
+
+@starting-style {
+  .menu-panel {
+    opacity: 0;
+    translate: 0 -8px;
+  }
 }
 
 .menu-panel nav {
@@ -437,6 +462,18 @@ a {
   padding-block: clamp(78px, 12vh, 132px);
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 .wrap {
   max-width: 1160px;
   margin-inline: auto;
@@ -459,15 +496,56 @@ a {
   text-wrap: balance;
 }
 
+/* Reveals: src/scripts/motion.ts adds `.in` once an element enters the
+   viewport. Only opacity, translate and clip-path move (compositor-friendly);
+   `translate` is used instead of `transform` so element transforms survive. */
 .js .reveal {
-  opacity: 1;
-  transform: none;
-  transition: none;
+  opacity: 0;
+  translate: 0 24px;
+  transition: opacity 0.7s var(--ease-out), translate 0.8s var(--ease-out);
 }
 
 .js .reveal.in {
   opacity: 1;
-  transform: none;
+  translate: none;
+}
+
+/* Section titles are drafted in from the baseline, like a line being inked. */
+.js [data-motion='section-head'] h2 {
+  clip-path: inset(0 0 100% 0);
+  translate: 0 18px;
+  transition: clip-path 0.9s var(--ease-draw) 0.1s, translate 0.9s var(--ease-draw) 0.1s;
+}
+
+.js [data-motion='section-head'].in h2 {
+  clip-path: inset(-0.3em);
+  translate: none;
+}
+
+.js .svc-rail .svc-card {
+  opacity: 0;
+  translate: 0 34px;
+  transition: opacity 0.7s var(--ease-out), translate 0.7s var(--ease-out);
+}
+
+.js .svc-rail.in .svc-card {
+  opacity: 1;
+  translate: none;
+}
+
+.js .svc-rail .svc-card:nth-child(2) { transition-delay: 0.1s; }
+.js .svc-rail .svc-card:nth-child(3) { transition-delay: 0.2s; }
+.js .svc-rail .svc-card:nth-child(4) { transition-delay: 0.3s; }
+
+.js .contact-panel .contact-title {
+  clip-path: inset(0 0 100% 0);
+  translate: 0 30px;
+  transition: clip-path 0.95s var(--ease-draw) 0.15s, translate 0.95s var(--ease-draw) 0.15s;
+}
+
+.js .contact-panel.in .contact-title {
+  clip-path: inset(-0.3em);
+  translate: none;
 }
 
 .hero {
@@ -483,6 +561,7 @@ a {
   height: 100dvh;
   overflow: hidden;
   background: var(--noche);
+  contain: layout paint;
 }
 
 .hero-canvas {
@@ -508,6 +587,9 @@ a {
 
 .hero-poster {
   position: absolute;
+  /* Above the opaque canvas (black until its first frame) so the poster is
+     what paints first; it fades out once the canvas draws. */
+  z-index: 1;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -564,13 +646,12 @@ a {
   text-align: center;
   animation: hero-copy-in 1.1s cubic-bezier(0.2, 0.8, 0.2, 1);
   transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
-    transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.7s ease;
+    transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .hero-intro.is-exiting {
   opacity: 0;
   transform: translate(-50%, calc(-50% - 22px));
-  filter: blur(5px);
   pointer-events: none;
 }
 
@@ -612,6 +693,30 @@ a {
   color: var(--ambar-claro);
 }
 
+/* Title enters word by word, each rising from its own baseline mask. The
+   negative insets leave room for the italic overhang and accents. */
+.hero-title .w {
+  display: inline-block;
+  clip-path: inset(-0.3em -0.3em -0.12em -0.3em);
+}
+
+.hero-title .w > span {
+  display: inline-block;
+  animation: word-rise 1s var(--ease-draw) both;
+  animation-delay: calc(0.15s + var(--i, 0) * 0.08s);
+}
+
+@keyframes word-rise {
+  from {
+    opacity: 0;
+    translate: 0 105%;
+  }
+  to {
+    opacity: 1;
+    translate: none;
+  }
+}
+
 .hero-sub {
   margin: 0 auto;
   max-width: 42ch;
@@ -625,12 +730,10 @@ a {
   from {
     opacity: 0;
     transform: translate(-50%, calc(-50% + 22px));
-    filter: blur(5px);
   }
   to {
     opacity: 1;
     transform: translate(-50%, -50%);
-    filter: blur(0);
   }
 }
 
@@ -754,6 +857,37 @@ html:not(.js) .bridge-inner,
   color: var(--cian-ink);
 }
 
+/* Scale bar of the drawing: ticks every 10 %, filled by the scrub progress
+   (--p, written by src/scripts/hero-sequence.ts). */
+.hud-ruler {
+  position: relative;
+  width: 132px;
+  height: 6px;
+  border-bottom: 1px solid color-mix(in srgb, var(--papel) 28%, transparent);
+  background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--papel) 40%, transparent) 0 1px, transparent 1px 10%);
+}
+
+.hud-ruler::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: color-mix(in srgb, var(--papel) 40%, transparent);
+}
+
+.hud-ruler span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: var(--cian-ink);
+  transform-origin: left;
+  transform: scaleX(var(--p, 0));
+}
+
 .hero-status {
   position: absolute;
   z-index: 2;
@@ -826,7 +960,11 @@ html:not(.js) .hero-intro {
   animation: none;
   opacity: 1;
   transform: translate(-50%, -50%);
-  filter: none;
+}
+
+.static-hero .hero-title .w > span,
+html:not(.js) .hero-title .w > span {
+  animation: none;
 }
 
 html:not(.js) .hero-hud,
@@ -1219,9 +1357,31 @@ html:not(.js) .hero-intro::before {
     scroll-behavior: auto;
   }
 
-  .js .reveal {
+  .js .reveal,
+  .js .svc-rail .svc-card {
     opacity: 1;
-    transform: none;
+    translate: none;
+    transition: none;
+  }
+
+  .js [data-motion='section-head'] h2,
+  .js .contact-panel .contact-title {
+    clip-path: none;
+    translate: none;
+    transition: none;
+  }
+
+  .js .process-line span {
+    scale: 1 1;
+    animation: none;
+    transition: none;
+  }
+
+  .hero-title .w > span {
+    animation: none;
+  }
+
+  .menu-panel {
     transition: none;
   }
 
@@ -1368,7 +1528,26 @@ html:not(.js) .hero-intro::before {
 .process-section { border-bottom: 1px solid var(--hair); }
 .process-timeline { position: relative; display: grid; gap: 0; }
 .process-line { position: absolute; top: 0; bottom: 0; left: 87px; width: 1px; background: var(--hair); }
-.process-line span { display: block; width: 100%; height: 0; background: var(--cian); }
+.process-line span { display: block; width: 100%; height: 100%; background: var(--cian); transform-origin: top; }
+.js .process-line span { scale: 1 0; transition: scale 1.6s var(--ease-out); }
+.js .process-timeline.in .process-line span { scale: 1 1; }
+/* Same range the GSAP scrub used: starts when the timeline's top reaches 72 %
+   of the viewport, ends when its bottom reaches 78 %. */
+@supports (animation-timeline: view()) {
+  .process-timeline { view-timeline: --process block; }
+  .js .process-line span {
+    transition: none;
+    animation: process-draw linear both;
+    animation-timeline: --process;
+    animation-range: cover 28vh cover calc(100% - 78vh);
+  }
+}
+@keyframes process-draw { from { scale: 1 0; } to { scale: 1 1; } }
+
+/* Project gallery photo swap (View Transitions API, see Proyectos.astro). */
+::view-transition-group(ficha-photo),
+::view-transition-old(ficha-photo),
+::view-transition-new(ficha-photo) { animation-duration: .34s; animation-timing-function: ease; }
 .process-step { position: relative; display: grid; grid-template-columns: 176px 1fr; gap: 20px; padding: 27px 0 31px; border-top: 1px solid var(--hair); }
 .process-step:last-child { border-bottom: 1px solid var(--hair); }
 .process-number { position: relative; z-index: 1; width: 42px; height: 42px; display: grid; place-items: center; margin: 0; color: var(--cian-text); background: var(--papel); border: 1px solid var(--cian); font-family: var(--f-mono); font-size: 11px; }
@@ -1438,61 +1617,62 @@ html:not(.js) .hero-intro::before {
 .instagram-copy > p:not(.section-index) { margin: 23px 0 28px; color: var(--tinta-75); line-height: 1.65; }
 .instagram-cta { color: var(--cian-text); border-color: var(--cian-text); }
 .instagram-cta span { font-size: 15px; }
-.ig-wrap { position: relative; justify-self: center; width: min(430px, 88vw); padding: 28px 20px; }
+/* Registro de obra: real reels of the brand as a drawing-sheet strip. */
+/* min-width: 0 keeps the grid track from growing to fit the carousel strip. */
+.ig-sheet-wrap { position: relative; min-width: 0; padding: 30px 0; }
 .ig-note { position: absolute; color: var(--cian-text); font-family: var(--f-mono); font-size: 9px; letter-spacing: .17em; white-space: nowrap; }
 .ig-note--top { top: 6px; right: 0; }
 .ig-note--bottom { bottom: 6px; left: 0; }
+.ig-sheet { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(12px, 1.6vw, 20px); margin: 0; padding: 0; list-style: none; }
+.ig-card { display: block; color: inherit; text-decoration: none; }
+.ig-card:focus-visible { outline: 2px solid var(--cian-ink); outline-offset: 4px; }
+.ig-frame { position: relative; display: block; aspect-ratio: 9 / 16; overflow: hidden; border: 1px solid color-mix(in srgb, var(--papel) 22%, transparent); background: color-mix(in srgb, var(--papel) 6%, var(--noche)); transition: border-color .3s ease; }
+.ig-frame img { display: block; width: 100%; height: 100%; object-fit: cover; filter: saturate(.8); transition: scale .8s var(--ease-out), filter .5s ease; }
+.ig-code, .ig-kind { position: absolute; top: 10px; display: inline-flex; align-items: center; gap: 5px; padding: 5px 8px; background: color-mix(in srgb, var(--noche) 80%, transparent); font-family: var(--f-mono); font-size: 9.5px; letter-spacing: .18em; text-transform: uppercase; }
+.ig-code { left: 10px; color: var(--cian-ink); }
+.ig-kind { right: 10px; color: var(--papel); }
+.ig-kind svg { width: 10px; height: 10px; fill: currentColor; }
+.ig-label { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 12px; padding-top: 10px; border-top: 1px solid color-mix(in srgb, var(--papel) 18%, transparent); font-family: var(--f-display); font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.ig-arrow { color: var(--cian-ink); transition: translate .3s var(--ease-out); }
+.ig-card:hover .ig-frame, .ig-card:focus-visible .ig-frame { border-color: var(--cian-ink); }
+.ig-card:hover .ig-frame img, .ig-card:focus-visible .ig-frame img { scale: 1.04; filter: saturate(1); }
+.ig-card:hover .ig-arrow, .ig-card:focus-visible .ig-arrow { translate: 3px -3px; }
+.js .ig-sheet .ig-cell { opacity: 0; translate: 0 30px; transition: opacity .7s var(--ease-out), translate .8s var(--ease-out); }
+.js .ig-sheet.in .ig-cell { opacity: 1; translate: none; }
+.js .ig-sheet .ig-cell:nth-child(2) { transition-delay: .1s; }
+.js .ig-sheet .ig-cell:nth-child(3) { transition-delay: .2s; }
+.js .ig-sheet .ig-cell:nth-child(4) { transition-delay: .3s; }
 
-.ig-post { background: #fff; color: #262626; border: 1px solid #dbdbdb; border-radius: 12px; overflow: hidden; box-shadow: 0 24px 48px rgba(0, 0, 0, .28); transition: transform .22s ease, box-shadow .22s ease; }
-.ig-post:hover { transform: translateY(-4px); box-shadow: 0 30px 56px rgba(0, 0, 0, .32); }
-.ig-head { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
-.ig-identity { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; text-decoration: none; color: inherit; border-radius: 8px; }
-.ig-avatar { flex: none; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; padding: 2px; background: conic-gradient(from 210deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5, #feda75); }
-.ig-avatar img { display: block; width: 32px; height: 32px; border-radius: 50%; border: 2px solid #fff; background: var(--noche); }
-.ig-names { display: grid; gap: 1px; min-width: 0; line-height: 1.25; }
-.ig-names strong { font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ig-names small { font-size: 11.5px; color: #737373; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ig-follow { flex: none; padding: 8px 14px; min-height: 36px; border-radius: 8px; background: #006e9e; color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; transition: background .18s ease; }
-.ig-follow:hover { background: #005a82; }
-
-.ig-media { position: relative; margin: 0; aspect-ratio: 4 / 3; overflow: hidden; background: #efefef; }
-.ig-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.ig-process { position: absolute; left: 12px; bottom: 12px; margin: 0; padding: 8px 12px; border-radius: 999px; background: rgba(10, 15, 18, .72); color: #fff; font-family: var(--f-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; backdrop-filter: blur(4px); }
-.ig-reel { position: absolute; top: 12px; right: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px 8px 9px; min-height: 36px; border-radius: 999px; background: rgba(10, 15, 18, .72); color: #fff; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; backdrop-filter: blur(4px); transition: background .18s ease; }
-.ig-reel:hover { background: rgba(10, 15, 18, .88); }
-.ig-reel svg { width: 16px; height: 16px; fill: currentColor; }
-.ig-reel:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-.ig-burst { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; pointer-events: none; }
-.ig-burst svg { width: 92px; height: 92px; fill: #fff; filter: drop-shadow(0 6px 18px rgba(0, 0, 0, .45)); transform: scale(.4); }
-.ig-post.is-burst .ig-burst { animation: ig-burst .6s ease forwards; }
-@keyframes ig-burst { 0% { opacity: 0; } 18% { opacity: 1; } 100% { opacity: 0; } }
-.ig-post.is-burst .ig-burst svg { animation: ig-pop .6s cubic-bezier(.16,1,.3,1) forwards; }
-@keyframes ig-pop { 0% { transform: scale(.4); } 45% { transform: scale(1.15); } 70% { transform: scale(.95); } 100% { transform: scale(1); } }
-
-.ig-actions { display: flex; align-items: center; justify-content: space-between; padding: 2px 8px; }
-.ig-actions-left { display: flex; align-items: center; }
-.ig-btn { display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: #262626; cursor: pointer; transition: transform .16s ease, color .16s ease; }
-.ig-btn:hover { color: #737373; }
-.ig-btn svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.ig-like.is-liked { color: #ff3040; }
-.ig-like.is-liked svg { fill: #ff3040; stroke: #ff3040; }
-.ig-like.is-pop svg { animation: ig-pop .32s cubic-bezier(.16,1,.3,1); }
-.ig-save.is-saved { color: #262626; }
-.ig-save.is-saved svg { fill: #262626; }
-.ig-btn:focus-visible, .ig-follow:focus-visible, .ig-identity:focus-visible, .ig-comments:focus-visible, .ig-add-comment:focus-visible, .ig-open:focus-visible { outline: 2px solid var(--cian-text); outline-offset: 2px; }
-
-.ig-likes { margin: 0; padding: 0 14px; font-size: 14px; }
-.ig-caption { margin: 4px 0 0; padding: 0 14px; font-size: 14px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.ig-caption strong { font-weight: 600; }
-.ig-tags { color: #00376b; }
-.ig-comments { display: inline-block; margin: 6px 0 0; padding: 4px 14px; font-size: 14px; color: #737373; text-decoration: none; }
-.ig-comments:hover { color: #262626; }
-.ig-foot { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 4px 0 0; padding: 8px 14px 10px; border-top: 1px solid #efefef; }
-.ig-add-comment { font-size: 14px; color: #737373; text-decoration: none; }
-.ig-add-comment:hover { color: #262626; }
-.ig-time { font-size: 10.5px; letter-spacing: .08em; color: #737373; white-space: nowrap; }
-.ig-open { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 11px; min-height: 44px; border-top: 1px solid #efefef; color: #006e9e; font-size: 14px; font-weight: 600; text-decoration: none; transition: background .18s ease; }
-.ig-open:hover { background: #fafafa; }
+/* Mobile/tablet: the three 9:16 cells would be too narrow side by side, so
+   the sheet becomes a full-bleed carousel (native scroll-snap, see
+   setupSnapCarousels in motion.ts). Cards snap to the center; the side
+   padding lets the first and last one center too. */
+@media (max-width: 760px) {
+  /* Width is also capped by height so a 9:16 card never outgrows the screen. */
+  .ig-sheet-wrap { --ig-card: min(72vw, 360px, 35svh); padding-bottom: 0; }
+  .ig-sheet {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: var(--ig-card);
+    gap: 14px;
+    margin-inline: calc(-1 * clamp(22px, 5vw, 60px));
+    padding: 4px calc((100vw - var(--ig-card)) / 2) 6px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .ig-sheet::-webkit-scrollbar { display: none; }
+  .ig-cell { scroll-snap-align: center; scroll-snap-stop: always; }
+  .ig-sheet-wrap.is-carousel .ig-sheet .ig-cell { transition: opacity .4s ease, scale .5s var(--ease-out), translate .8s var(--ease-out); transition-delay: 0s; }
+  .ig-sheet-wrap.is-carousel .ig-cell:not(.is-active) { opacity: .42; scale: .92; }
+  .ig-sheet-wrap.is-carousel .ig-cell:not(.is-active) .ig-kind,
+  .ig-sheet-wrap.is-carousel .ig-cell:not(.is-active) .ig-code { opacity: 0; }
+  .ig-code, .ig-kind { transition: opacity .3s ease; }
+  .ig-note--top { position: static; margin: 0 0 14px; text-align: right; }
+  .ig-note--bottom { display: none; }
+  .ig-controls { margin-top: 22px; }
+}
 
 .faq-section { border-top: 1px solid var(--hair-soft); }
 .faq-list { border-top: 1px solid var(--hair); }
@@ -1598,7 +1778,6 @@ html:not(.js) .hero-intro::before {
   .showcase-intro { margin: 0; }
   .instagram-layout { gap: 54px; }
   .instagram-copy { max-width: 44ch; }
-  .ig-wrap { margin-inline: auto; }
   .cotizador-panel { grid-template-columns: 1fr; }
   .cotizador-preview { position: static; border-left: 0; border-top: 1px solid var(--hair); }
   .wz-mini { position: sticky; top: 78px; z-index: 5; display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--tinta); color: var(--papel); }
@@ -1641,9 +1820,6 @@ html:not(.js) .hero-intro::before {
   .process-line { left: 20px; }
   .process-step { grid-template-columns: 54px 1fr; gap: 18px; padding-block: 23px; }
   .process-number { width: 40px; height: 40px; }
-  .ig-wrap { padding-inline: 18px; }
-  .ig-note--top { right: 0; }
-  .ig-note--bottom { left: 0; }
   .chain-dim { height: auto; padding-bottom: 14px; }
   .dim-label {
     position: static;
@@ -1670,8 +1846,10 @@ html:not(.js) .hero-intro::before {
   .chat-dot { animation: none; }
   .service-image img { transition: none; }
   .plot::after { display: none; }
-  .ig-post { transform: none; transition: none; }
-  .ig-post.is-burst .ig-burst, .ig-post.is-burst .ig-burst svg, .ig-like.is-pop svg { animation: none; }
+  .js .ig-sheet .ig-cell { opacity: 1; translate: none; transition: none; }
+  .ig-sheet-wrap.is-carousel .ig-sheet .ig-cell { transition: none; }
+  .ig-sheet { scroll-behavior: auto; }
+  .ig-frame img, .ig-arrow { transition: none; }
   .faq-item::details-content { transition: none; }
   .wz-track span { transition: none; }
 }
@@ -1774,10 +1952,6 @@ html:not(.js) .hero-intro::before {
 .instagram-section--night .instagram-cta:hover {
   color: var(--noche);
   background: var(--cian-ink);
-}
-
-.instagram-section--night .ig-wrap {
-  filter: drop-shadow(18px 24px 0 rgba(0, 0, 0, .2));
 }
 
 .instagram-section--night .ig-note {

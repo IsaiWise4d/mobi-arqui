@@ -1,136 +1,64 @@
 ---
-import { marca } from '../data/sitio';
+import { marca, instagramPosts } from '../data/sitio';
 
-const postUrl = 'https://www.instagram.com/reel/Ddud8nsJFFn/';
-const fotoSrc = '/instagram/reel-Ddud8nsJFFn.jpg';
-const fotoAlt = 'Barra de negocio con iluminación LED cálida, lámparas colgantes y taburetes — obra de Mobi Arquitectura';
+const pad = (n: number) => String(n).padStart(2, '0');
 ---
 
 <section class="sec instagram-section instagram-section--night" aria-labelledby="instagram-title">
   <div class="wrap instagram-layout">
-    <div class="instagram-copy reveal" data-gsap="section-head">
+    <div class="instagram-copy reveal" data-motion="section-head">
       <p class="section-index">05 / DETRÁS DEL PLANO</p>
       <h2 class="sec-title" id="instagram-title">El taller,<br /><span>en vivo.</span></h2>
       <p>Ideas, materiales y espacios en proceso. Conoce el día a día de Mobi antes de que el plano llegue a tu casa.</p>
       <a class="sello instagram-cta" href={marca.instagram} target="_blank" rel="noopener">Seguir en Instagram <span aria-hidden="true">↗</span></a>
     </div>
-    <div class="ig-wrap reveal" data-gsap="ig-post">
-      <span class="ig-note ig-note--top" aria-hidden="true">POST EN VIVO · IG-01</span>
-      <article class="ig-post" data-ig-post aria-label="Publicación de Instagram de Mobi Arquitectura">
-        <header class="ig-head">
-          <a class="ig-identity" href={marca.instagram} target="_blank" rel="noopener" aria-label="Abrir perfil de Mobi Arquitectura en Instagram">
-            <span class="ig-avatar" aria-hidden="true">
-              <img src="/favicon.svg" alt="" width="32" height="32" loading="lazy" />
-            </span>
-            <span class="ig-names">
-              <strong>mobi_arquitectura</strong>
-              <small>Barranquilla · Obra y carpintería</small>
-            </span>
-          </a>
-          <a class="ig-follow" href={marca.instagram} target="_blank" rel="noopener">Seguir</a>
-        </header>
 
-        <figure class="ig-media" data-ig-media>
-          <img src={fotoSrc} alt={fotoAlt} loading="lazy" decoding="async" />
-          <a class="ig-reel" href={postUrl} target="_blank" rel="noopener" aria-label="Ver este reel en Instagram">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5-11-6.5Z" /></svg>
-            Reel
-          </a>
-          <span class="ig-burst" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M12 21s-7.4-4.9-9.8-9.2C.6 8.6 2.4 5 5.9 5c2 0 3.4 1.1 4.1 2.3h4c.7-1.2 2.1-2.3 4.1-2.3 3.5 0 5.3 3.6 3.7 6.8C19.4 16.1 12 21 12 21Z" /></svg>
-          </span>
-          <a class="ig-process" href={postUrl} target="_blank" rel="noopener">♪ RonaStudios · Peace Out</a>
-        </figure>
-
-        <div class="ig-actions">
-          <div class="ig-actions-left">
-            <button type="button" class="ig-btn ig-like" data-ig-like aria-pressed="false" aria-label="Me gusta en esta publicación">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.4-4.9-9.8-9.2C.6 8.6 2.4 5 5.9 5c2.1 0 3.6 1.2 4.3 2.6l1.8 3 1.8-3C14.5 6.2 16 5 18.1 5c3.5 0 5.3 3.6 3.7 6.8C19.4 16.1 12 21 12 21Z" /></svg>
-            </button>
-            <a class="ig-btn" href={postUrl} target="_blank" rel="noopener" aria-label="Comentar esta publicación en Instagram">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4C7 4 3 7.9 3 12.7c0 2.7 1.3 5.1 3.4 6.7L5.5 21l2.2-.7c1.3.7 2.7 1 4.3 1 5 0 9-3.9 9-8.6S17 4 12 4Z" /></svg>
-            </a>
-            <a class="ig-btn" href={postUrl} target="_blank" rel="noopener" aria-label="Compartir esta publicación de Instagram">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3 10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8 21 3Z" /></svg>
-            </a>
-          </div>
-          <button type="button" class="ig-btn ig-save" data-ig-save aria-pressed="false" aria-label="Guardar esta publicación">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.2L5 21V4a1 1 0 0 1 1-1Z" /></svg>
-          </button>
-        </div>
-
-        <p class="ig-likes"><strong data-ig-count>4.714</strong> Me gusta</p>
-
-        <p class="ig-caption">
-          <strong>mobi_arquitectura</strong> Tu competencia sigue haciendo lo mismo de siempre; tú puedes marcar la
-          diferencia. ¿Qué esperas para transformar tu negocio? Escríbeme por DM y hazlo realidad hoy.
-          <span class="ig-tags">#DiseñoInterior #ArquitecturaComercial #Remodelación #Negocios #Interiorismo</span>
-        </p>
-
-        <a class="ig-comments" href={postUrl} target="_blank" rel="noopener">Ver los 48 comentarios</a>
-
-        <div class="ig-foot">
-          <a class="ig-add-comment" href={postUrl} target="_blank" rel="noopener">Agrega un comentario…</a>
-          <time class="ig-time" datetime="2026-09-01">HACE 2 SEMANAS</time>
-        </div>
-
-        <a class="ig-open" href={postUrl} target="_blank" rel="noopener">Ver más en Instagram <span aria-hidden="true">↗</span></a>
-      </article>
-      <span class="ig-note ig-note--bottom" aria-hidden="true">@MOBI_ARQUITECTURA</span>
+    <div
+      class="ig-sheet-wrap"
+      data-snap-carousel
+      aria-roledescription="carrusel"
+      aria-label={`Reels de ${marca.instagramHandle}`}
+    >
+      <p class="ig-note ig-note--top" aria-hidden="true">REGISTRO DE OBRA · {pad(instagramPosts.length)} REELS</p>
+      <ul class="ig-sheet" data-snap-viewport>
+        {
+          instagramPosts.map((post, i) => (
+            <li
+              class="ig-cell"
+              data-snap-slide
+              aria-roledescription="diapositiva"
+              aria-label={`${i + 1} de ${instagramPosts.length}`}
+            >
+              <a class="ig-card" href={post.url} target="_blank" rel="noopener">
+                <span class="ig-frame">
+                  <img src={post.foto} alt={post.alt} width={post.ancho} height={post.alto} loading="lazy" decoding="async" />
+                  <span class="ig-code" aria-hidden="true">IG-{pad(i + 1)}</span>
+                  <span class="ig-kind" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5-11-6.5Z" /></svg>
+                    Reel
+                  </span>
+                </span>
+                <span class="ig-label">
+                  <span><span class="sr-only">Ver reel en Instagram: </span>{post.etiqueta}</span>
+                  <span class="ig-arrow" aria-hidden="true">↗</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <!-- Controls show only in the mobile carousel (≤760px), like the other carousels. -->
+      <div class="carousel-controls ig-controls">
+        <button class="carousel-button" type="button" data-snap-prev aria-label="Reel anterior">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7M8 12h10" /></svg>
+        </button>
+        <div class="carousel-progress" aria-hidden="true"><span></span></div>
+        <p class="carousel-count"><span data-snap-current>01</span> / {pad(instagramPosts.length)}</p>
+        <button class="carousel-button" type="button" data-snap-next aria-label="Siguiente reel">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5l7 7-7 7M16 12H6" /></svg>
+        </button>
+      </div>
+      <p class="ig-note ig-note--bottom" aria-hidden="true">{marca.instagramHandle.toUpperCase()}</p>
     </div>
   </div>
 </section>
-
-<script>
-  document.querySelectorAll('[data-ig-post]').forEach((post) => {
-    const like = post.querySelector('[data-ig-like]');
-    const save = post.querySelector('[data-ig-save]');
-    const count = post.querySelector('[data-ig-count]');
-    const media = post.querySelector('[data-ig-media]');
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const base = 4714;
-    const fmt = (n) => n.toLocaleString('es-CO');
-    let liked = false;
-    let burstTimer = 0;
-
-    const paint = () => {
-      like?.setAttribute('aria-pressed', String(liked));
-      like?.classList.toggle('is-liked', liked);
-      if (count) count.textContent = fmt(base + (liked ? 1 : 0));
-      if (!reduced && like) {
-        like.classList.remove('is-pop');
-        void like.offsetWidth;
-        like.classList.add('is-pop');
-      }
-    };
-
-    const burst = () => {
-      if (reduced || !post) return;
-      post.classList.remove('is-burst');
-      void post.offsetWidth;
-      post.classList.add('is-burst');
-      window.clearTimeout(burstTimer);
-      burstTimer = window.setTimeout(() => post.classList.remove('is-burst'), 650);
-    };
-
-    like?.addEventListener('click', () => {
-      liked = !liked;
-      if (liked) burst();
-      paint();
-    });
-
-    save?.addEventListener('click', () => {
-      const pressed = save.getAttribute('aria-pressed') === 'true';
-      save.setAttribute('aria-pressed', String(!pressed));
-      save.classList.toggle('is-saved', !pressed);
-    });
-
-    media?.addEventListener('dblclick', () => {
-      if (!liked) {
-        liked = true;
-        paint();
-      }
-      burst();
-    });
-  });
-</script>

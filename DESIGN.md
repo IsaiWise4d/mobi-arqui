@@ -159,13 +159,14 @@ La silueta es ortogonal: los componentes no usan esquinas redondeadas (`{rounded
 - **Mobile treatment:** navegación oculta a menos de `820px`; permanece disponible mediante los anclajes del documento y el salto accesible al contenido.
 
 ### Signature Component: Héroe canvas
-El héroe monta 300 imágenes JPG (`/frames/ezgif-frame-001.jpg` a `/frames/ezgif-frame-300.jpg`) en un canvas que cubre el stage y recorta la imagen con `object-fit: cover` equivalente. Carga primero cada quinto frame y después el resto en lotes de ocho; el progreso del scroll selecciona el frame objetivo y actualiza `F 001/300`. El intro se desvanece después del primer tramo del scrub y la franja de contacto aparece al acercarse al final.
+El héroe dibuja una secuencia WebP en un canvas que cubre el stage y recorta la imagen con `object-fit: cover` equivalente: 300 frames de 1920×1080 en desktop (`/seq/desktop/f-001..300.webp`, ~21 MB) y 150 de 720×960 en móvil (`/seq/mobile/`, ~3 MB), generados con `tools/encode-frames.mjs`. El primer frame es un póster en el HTML (LCP) hasta que el canvas pinta. Los frames se descargan de grueso a fino (cada 8.º, 4.º, 2.º y el resto), empezando por los más cercanos a la posición del scroll, y solo una ventana de frames alrededor del playhead se mantiene decodificada. El progreso del scroll selecciona el frame objetivo, actualiza `F 001/300` y llena la regla de escala del HUD. El intro se desvanece después del primer tramo del scrub y la franja de contacto aparece al acercarse al final.
 
 Estados implementados:
-- **Loading:** status `CARGANDO SECUENCIA · 300 CUADROS`; el primer frame disponible se dibuja mientras continúa la carga.
+- **Loading:** status `CARGANDO SECUENCIA · 300 CUADROS`; el póster se ve mientras llega el primer frame.
 - **Reduced motion:** con `prefers-reduced-motion: reduce`, se carga solo el frame final, se muestra `VISTA FINAL · MOVIMIENTO REDUCIDO`, se ocultan HUD y acotación lateral y se desactivan las revelaciones animadas.
-- **Error/fallback:** si fallan los primeros ocho intentos antes de cargar alguno, se muestra `VISTA DE RESPALDO` junto con `ezgif-frame-300.jpg` como fallback visible.
-- **No JavaScript:** `noscript` entrega `ezgif-frame-300.jpg`, oculta los elementos de HUD y conserva el copy sobre un gradiente de contraste.
+- **Ahorro de datos:** con `Save-Data` o conexión 2G se comporta como reduced motion y muestra `VISTA FINAL · AHORRO DE DATOS`.
+- **Error/fallback:** si fallan los primeros ocho intentos antes de cargar alguno, se muestra `VISTA DE RESPALDO` junto con el frame 300 como fallback visible.
+- **No JavaScript:** `noscript` entrega el frame 300, oculta los elementos de HUD y conserva el copy sobre un gradiente de contraste.
 
 ### Signature Component: Portafolio pendiente
 El bloque `#portafolio` es un plot `16:9` con coordenadas, sello `En levantamiento` y texto explícito de que aún no hay proyectos publicados. Es un placeholder de contenido, no una galería ni una afirmación de obra realizada.
