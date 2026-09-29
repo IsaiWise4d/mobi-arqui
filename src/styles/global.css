@@ -282,15 +282,17 @@ html.on-hero .cajetin.is-scrolled {
   display: grid;
 }
 
-.menu-panel a {
-  display: flex;
+.menu-panel nav a {
+  display: grid;
+  /* Fixed index column so every title starts on the same vertical. */
+  grid-template-columns: 30px 1fr auto;
   align-items: baseline;
-  gap: 14px;
-  padding: 14px 18px;
+  padding: 15px 20px;
   color: var(--tinta);
   font-family: var(--f-display);
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.2;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-decoration: none;
@@ -298,11 +300,20 @@ html.on-hero .cajetin.is-scrolled {
   transition: color 0.2s ease, background 0.2s ease;
 }
 
-.menu-panel a:first-child {
+.menu-panel nav a::after {
+  content: '→';
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: 0;
+  color: var(--tinta-40);
+  transition: color 0.2s ease, translate 0.25s var(--ease-out);
+}
+
+.menu-panel nav a:first-child {
   border-top: 0;
 }
 
-.menu-panel a b {
+.menu-panel nav a b {
   font-family: var(--f-mono);
   font-weight: 400;
   font-size: 9px;
@@ -310,10 +321,44 @@ html.on-hero .cajetin.is-scrolled {
   color: var(--cian-text);
 }
 
-.menu-panel a:hover,
-.menu-panel a:focus-visible {
+.menu-panel nav a:hover,
+.menu-panel nav a:focus-visible {
   color: var(--cian-text);
   background: color-mix(in srgb, var(--papel-2) 70%, transparent);
+}
+
+.menu-panel nav a:hover::after,
+.menu-panel nav a:focus-visible::after {
+  color: var(--cian-text);
+  translate: 3px 0;
+}
+
+.menu-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--hair);
+  background: color-mix(in srgb, var(--papel-2) 60%, transparent);
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tinta-55);
+}
+
+.menu-foot a {
+  color: var(--cian-text);
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 10px;
+}
+
+.menu-foot a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .cajetin nav {
@@ -362,20 +407,52 @@ html.on-hero .cajetin.is-scrolled {
 }
 
 @media (max-width: 820px) {
-  .cajetin {
-    grid-template-columns: auto 1fr auto;
+  /* Full-width pill aligned to a 12px gutter: brand left, actions right.
+     The 8px right inset makes the round toggle concentric with the pill end. */
+  .cajetin,
+  .cajetin--clean {
+    left: 12px;
+    right: 12px;
     top: 10px;
-    min-height: 50px;
+    width: auto;
+    max-width: none;
+    height: 60px;
+    min-height: 0;
+    transform: none;
+    grid-template-columns: 1fr auto;
     gap: 12px;
-    padding-inline: 14px;
+    padding: 0 8px 0 22px;
+  }
+
+  .cajetin.is-hidden {
+    transform: translateY(calc(-100% - 24px));
   }
 
   .cajetin nav {
     display: none;
   }
 
+  .nav-actions {
+    gap: 8px;
+  }
+
   .nav-toggle {
     display: grid;
+    border-radius: 50%;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .nav-toggle:hover {
+    border-color: color-mix(in srgb, var(--tinta) 32%, transparent);
+  }
+
+  .nav-toggle[aria-expanded='true'] {
+    background: var(--tinta);
+    border-color: var(--tinta);
+  }
+
+  .nav-toggle[aria-expanded='true'] span {
+    background: var(--papel);
   }
 
   .brand {
@@ -390,9 +467,62 @@ html.on-hero .cajetin.is-scrolled {
 
   .sello-nav {
     font-size: 9px;
-    padding: 0.7em 0.8em;
+    padding: 0.7em 0.9em;
     min-height: 44px;
     white-space: nowrap;
+  }
+
+  .menu-panel {
+    top: 78px;
+    left: auto;
+    right: 12px;
+    transform: none;
+    width: min(400px, calc(100vw - 24px));
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 16px 40px rgba(27, 31, 30, 0.14);
+  }
+}
+
+@media (max-width: 600px) {
+  /* Stack the wordmark so ARQUITECTURA stays visible on phones. */
+  .brand {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .brand b {
+    font-size: 17px;
+  }
+
+  .brand span {
+    padding-left: 0;
+    border-left: 0;
+    font-size: 7px;
+    letter-spacing: 0.3em;
+  }
+}
+
+@media (max-width: 360px) {
+  .cajetin,
+  .cajetin--clean {
+    padding-left: 16px;
+    gap: 8px;
+  }
+
+  .brand b {
+    font-size: 15px;
+  }
+
+  .brand span {
+    font-size: 6px;
+  }
+
+  .cajetin .sello-nav {
+    font-size: 8.5px;
+    padding-inline: 0.7em;
+    letter-spacing: 0.06em;
   }
 }
 
@@ -1058,14 +1188,6 @@ html:not(.js) .hero-intro::before {
 }
 
 @media (max-width: 600px) {
-  .cajetin {
-    max-width: calc(100vw - 20px);
-  }
-
-  .brand b {
-    font-size: 17px;
-  }
-
   .hero-intro {
     width: calc(100% - 36px);
     /* Center the copy inside the VISIBLE strip (svh), not the taller lvh
@@ -1085,9 +1207,6 @@ html:not(.js) .hero-intro::before {
     text-shadow: 0 1px 3px rgba(10, 15, 18, 0.95), 0 0 18px rgba(10, 15, 18, 0.8);
   }
   .hero-side { display: none; }
-  .brand span { display: none; }
-  .brand { gap: 0; }
-  .cajetin { gap: 10px; }
 
   .hero {
     height: 340vh;
@@ -1238,117 +1357,200 @@ html:not(.js) .hero-intro::before {
 }
 
 .pie {
+  --pie-hair: color-mix(in srgb, var(--papel) 14%, transparent);
+  --pie-dim: color-mix(in srgb, var(--papel) 58%, transparent);
   border-top: 1px solid color-mix(in srgb, var(--cian-ink) 30%, transparent);
   background: var(--noche);
   color: var(--papel);
 }
 
-.pie-in {
+.pie ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pie p {
+  margin: 0;
+}
+
+.pie-grid {
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 28px;
-  padding-block: 20px;
+  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(32px, 4vw, 56px);
+  padding-block: clamp(52px, 7vw, 84px) clamp(40px, 5vw, 60px);
+}
+
+.pie-about {
+  display: grid;
+  align-content: start;
+  gap: 18px;
 }
 
 .pie-brand {
   display: inline-flex;
-  align-items: baseline;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
+  justify-self: start;
   color: var(--papel);
   text-decoration: none;
 }
 
 .pie-brand strong {
   font-family: var(--f-display);
-  font-size: 18px;
+  font-size: 24px;
+  line-height: 1;
   letter-spacing: .14em;
 }
 
 .pie-brand span {
-  padding-left: 10px;
+  padding-left: 12px;
   border-left: 1px solid color-mix(in srgb, var(--papel) 28%, transparent);
-  color: color-mix(in srgb, var(--papel) 58%, transparent);
+  color: var(--pie-dim);
   font-family: var(--f-mono);
-  font-size: 8px;
+  font-size: 9px;
+  line-height: 1.6;
+  letter-spacing: .2em;
+}
+
+.pie-tagline {
+  max-width: 32ch;
+  color: color-mix(in srgb, var(--papel) 72%, transparent);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.pie-code {
+  color: var(--cian-ink);
+  font-family: var(--f-mono);
+  font-size: 9px;
   letter-spacing: .16em;
 }
 
-.pie-links {
-  display: flex;
-  justify-content: center;
-  gap: clamp(16px, 2.5vw, 32px);
-}
-
-.pie-links a,
-.pie-meta {
-  color: color-mix(in srgb, var(--papel) 66%, transparent);
+.pie .pie-h {
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--pie-hair);
+  color: var(--cian-ink);
   font-family: var(--f-mono);
   font-size: 9px;
-  letter-spacing: .13em;
-  text-decoration: none;
+  letter-spacing: .16em;
   text-transform: uppercase;
 }
 
-.pie-links a {
+.pie-col ul {
+  display: grid;
+  gap: 11px;
+  color: color-mix(in srgb, var(--papel) 72%, transparent);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.pie-col a {
+  color: inherit;
+  text-decoration: none;
   transition: color .2s ease;
 }
 
-.pie-links a:hover {
-  color: var(--cian-ink);
+.pie-col .pie-contact {
+  gap: 14px;
 }
 
-.pie-meta {
+.pie-contact li {
+  display: grid;
+  gap: 4px;
+}
+
+.pie-contact li > span {
+  color: var(--pie-dim);
+  font-family: var(--f-mono);
+  font-size: 8.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.pie-contact a {
+  color: var(--papel);
+}
+
+.pie-bottom {
   display: flex;
-  gap: 18px;
-  justify-content: flex-end;
-  text-align: right;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 24px;
+  padding-block: 22px;
+  border-top: 1px solid var(--pie-hair);
+  color: var(--pie-dim);
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
 }
 
-.pie-in a:focus-visible {
+.pie-bottom p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+}
+
+.pie-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--papel);
+  text-decoration: none;
+  transition: color .2s ease;
+}
+
+.pie-top span {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid color-mix(in srgb, var(--papel) 28%, transparent);
+  transition: border-color .2s ease, translate .25s var(--ease-out);
+}
+
+.pie a:hover,
+.pie a:focus-visible {
   color: var(--cian-ink);
 }
 
-@media (max-width: 820px) {
-  .pie-in {
-    grid-template-columns: 1fr auto;
-    gap: 16px;
+.pie-top:hover span {
+  border-color: var(--cian-ink);
+  translate: 0 -2px;
+}
+
+@media (max-width: 900px) {
+  .pie-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .pie-links {
-    justify-content: flex-end;
-  }
-
-  .pie-meta {
+  .pie-about {
     grid-column: 1 / -1;
-    justify-content: space-between;
-    padding-top: 13px;
-    border-top: 1px solid color-mix(in srgb, var(--papel) 14%, transparent);
-    text-align: left;
+    padding-bottom: 8px;
   }
 }
 
 @media (max-width: 560px) {
-  .pie-in {
-    grid-template-columns: 1fr;
+  .pie-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 36px 24px;
   }
 
-  .pie-links {
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    gap: 10px 18px;
+  .pie-contact-col {
+    grid-column: 1 / -1;
   }
 
-  .pie-meta {
-    flex-wrap: wrap;
-    gap: 7px 16px;
+  .pie-bottom {
+    align-items: flex-end;
+    padding-block: 20px 16px;
   }
-}
 
-/* Keep the footer links quiet but clearly interactive. */
-.pie-in a:hover {
-  color: var(--cian-ink);
-  text-decoration: none;
+  .pie-bottom p {
+    flex-direction: column;
+  }
 }
 
 

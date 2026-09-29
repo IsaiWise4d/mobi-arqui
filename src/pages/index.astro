@@ -15,9 +15,11 @@ import Faq from '../components/Faq.astro';
 import Nosotros from '../components/Nosotros.astro';
 import Cotizador from '../components/Cotizador.astro';
 import Contacto from '../components/Contacto.astro';
-import { waLink, marca, whatsapp } from '../data/sitio';
+import { waLink, marca, whatsapp, servicios } from '../data/sitio';
 
 const waUrl = waLink();
+// 573104063602 → +57 310 406 3602
+const waVisible = whatsapp.numero.replace(/^(\d{2})(\d{3})(\d{3})(\d+)$/, '+$1 $2 $3 $4');
 const title = 'Mobi Arquitectura | Carpintería, Diseño y Obra Civil en Barranquilla';
 const description =
   'Carpintería arquitectónica, diseño de mobiliario, obra civil y acabados en Barranquilla, Colombia. Un solo equipo para llevar tu idea a la realidad.';
@@ -108,6 +110,10 @@ const jsonLd = {
         <a href="#cotizador"><b>08</b>Cotización rápida</a>
         <a href="#contacto"><b>—</b>Contacto</a>
       </nav>
+      <div class="menu-foot">
+        <span>{marca.ciudad}</span>
+        <a href={marca.instagram} target="_blank" rel="noopener">{marca.instagramHandle} <span aria-hidden="true">↗</span></a>
+      </div>
     </div>
 
     <main id="contenido">
@@ -186,21 +192,44 @@ const jsonLd = {
     </main>
 
     <footer class="pie">
-      <div class="wrap pie-in">
-        <a class="pie-brand" href="#inicio" aria-label="Volver al inicio">
-          <strong>MOBI</strong>
-          <span>ARQUITECTURA</span>
-        </a>
-        <nav class="pie-links" aria-label="Enlaces del pie de página">
-          <a href="#servicios">Servicios</a>
-          <a href="#proyectos">Proyectos</a>
-          <a href="#cotizador">Cotizador</a>
-          <a href={marca.instagram} target="_blank" rel="noopener">Instagram</a>
-          <a href="#contacto">Contacto</a>
-        </nav>
-        <div class="pie-meta">
-          <span>Barranquilla, Colombia</span>
-          <span>© 2026 Mobi Arquitectura</span>
+      <div class="wrap">
+        <div class="pie-grid">
+          <div class="pie-about">
+            <a class="pie-brand" href="#inicio" aria-label="Mobi Arquitectura, volver al inicio">
+              <strong>MOBI</strong>
+              <span>ARQUITECTURA</span>
+            </a>
+            <p class="pie-tagline">Diseñamos, construimos y fabricamos cada espacio con un solo equipo.</p>
+            <p class="pie-code">CARPINTERÍA · DISEÑO · OBRA CIVIL</p>
+          </div>
+          <nav class="pie-col" aria-labelledby="pie-secciones">
+            <p class="pie-h" id="pie-secciones">Secciones</p>
+            <ul>
+              <li><a href="#servicios">Servicios</a></li>
+              <li><a href="#metodo">Método de trabajo</a></li>
+              <li><a href="#proyectos">Proyectos</a></li>
+              <li><a href="#faq">Preguntas frecuentes</a></li>
+              <li><a href="#cotizador">Cotizador</a></li>
+            </ul>
+          </nav>
+          <div class="pie-col">
+            <p class="pie-h">Servicios</p>
+            <ul>
+              {servicios.map((s) => <li>{s.titulo}</li>)}
+            </ul>
+          </div>
+          <div class="pie-col pie-contact-col">
+            <p class="pie-h">Contacto</p>
+            <ul class="pie-contact">
+              <li><span>WhatsApp</span><a href={waUrl} target="_blank" rel="noopener">{waVisible}</a></li>
+              <li><span>Instagram</span><a href={marca.instagram} target="_blank" rel="noopener">{marca.instagramHandle}</a></li>
+              <li><span>Ubicación</span>{marca.ciudad}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="pie-bottom">
+          <p><span>{marca.ciudad}</span><span>© 2026 {marca.nombre}</span></p>
+          <a class="pie-top" href="#inicio">Volver arriba <span aria-hidden="true">↑</span></a>
         </div>
       </div>
     </footer>
