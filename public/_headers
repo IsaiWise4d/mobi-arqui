@@ -1,0 +1,9 @@
+# Cabeceras de caché (Netlify / Cloudflare Pages; otros hosts ignoran este archivo).
+# Los frames y los assets con hash no cambian de contenido bajo la misma URL.
+# Si se re-codifica la secuencia, cambiar la carpeta (p. ej. /seq-v2/) para invalidar.
+
+/seq/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable

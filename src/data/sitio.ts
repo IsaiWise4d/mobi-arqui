@@ -26,7 +26,7 @@ export const servicios = [
       'Diseñamos y fabricamos mobiliario y carpintería a medida en Barranquilla, integrados a la arquitectura del espacio.',
     cta: 'Hablar de mi espacio',
     tipo: 'Carpintería a medida',
-    foto: '/frames/ezgif-frame-278.jpg',
+    foto: '/seq/stills/f-278.webp',
     alt: 'Visualización de interior con carpintería en madera',
   },
   {
@@ -37,7 +37,7 @@ export const servicios = [
       'Convertimos tus ideas en propuestas funcionales, proporcionales y listas para fabricarse en nuestro taller.',
     cta: 'Cuéntanos tu idea',
     tipo: 'Diseño de mobiliario',
-    foto: '/frames/ezgif-frame-238.jpg',
+    foto: '/seq/stills/f-238.webp',
     alt: 'Visualización de mobiliario integrado en un espacio cálido',
   },
   {
@@ -48,7 +48,7 @@ export const servicios = [
       'Ejecutamos la obra en Barranquilla y cuidamos cada encuentro, textura y remate hasta la entrega.',
     cta: 'Planear una remodelación',
     tipo: 'Obra civil y acabados',
-    foto: '/frames/ezgif-frame-174.jpg',
+    foto: '/seq/stills/f-174.webp',
     alt: 'Visualización arquitectónica de obra y acabados',
   },
   {
@@ -58,7 +58,7 @@ export const servicios = [
     descripcion: 'Suministro e instalación de vidrio templado para cerrar el proyecto con precisión.',
     cta: 'Completar mi espacio',
     tipo: 'Divisiones de baño en vidrio',
-    foto: '/frames/ezgif-frame-211.jpg',
+    foto: '/seq/stills/f-211.webp',
     alt: 'Visualización de un baño con divisiones de vidrio',
   },
 ];
@@ -122,6 +122,36 @@ export const proyectos = [
 ];
 
 export const proyectoDestacado = proyectos[0];
+
+// Reels reales de @mobi_arquitectura (sección 05). Para cambiar uno: pegar el
+// enlace y guardar su portada vertical (9:16, idealmente 720×1280) en
+// public/instagram/. Sin cifras de likes ni comentarios: no se inventan métricas.
+export const instagramPosts = [
+  {
+    url: 'https://www.instagram.com/reel/Ddud8nsJFFn/',
+    foto: '/instagram/reel-Ddud8nsJFFn.webp',
+    ancho: 720,
+    alto: 1280,
+    etiqueta: 'Barra comercial',
+    alt: 'Barra de negocio con iluminación LED cálida, lámparas colgantes y taburetes',
+  },
+  {
+    url: 'https://www.instagram.com/reel/DcjwoW8vidh/',
+    foto: '/instagram/reel-DcjwoW8vidh.webp',
+    ancho: 720,
+    alto: 1280,
+    etiqueta: 'Puertas Luxury', // 🔶 confirmar etiqueta con el cliente
+    alt: 'Terraza con techo en madera, ventilador, comedor con mesa de mosaico y sala exterior',
+  },
+  {
+    url: 'https://www.instagram.com/reel/DcJ7O2ipseh/',
+    foto: '/instagram/reel-DcJ7O2ipseh.webp',
+    ancho: 720,
+    alto: 1280,
+    etiqueta: 'Obra en sitio', // 🔶 confirmar etiqueta con el cliente
+    alt: 'Estructura con cubierta rosada ondulada, columnas turquesa y ventanas circulares',
+  },
+];
 
 export const faq = [
   {

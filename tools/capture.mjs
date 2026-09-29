@@ -1,15 +1,21 @@
-import { mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync } from 'node:fs';
 import puppeteer from 'puppeteer-core';
 
-const EDGE = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
+// BROWSER_PATH overrides; otherwise the first installed Edge/Chrome is used.
+const BROWSER = [
+  process.env.BROWSER_PATH,
+  'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+  'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+].find((path) => path && existsSync(path));
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:4321/';
 const OUT = '.impeccable/review';
 mkdirSync(OUT, { recursive: true });
 
 const browser = await puppeteer.launch({
-  executablePath: EDGE,
+  executablePath: BROWSER,
   headless: true,
-  args: ['--disable-gpu', '--hide-scrollbars', '--force-color-profile=srgb'],
+  args: ['--disable-gpu', '--hide-scrollbars', '--force-color-profile=srgb', '--no-proxy-server'],
 });
 
 async function run({ width, height, mobile, reduced = false, names }) {
